@@ -1,0 +1,40 @@
+{
+  "kind": "collectionType",
+  "collectionName": "tags",
+  "info": {
+    "singularName": "tag",
+    "pluralName": "tags",
+    "displayName": "Tag",
+    "description": "Tags for categorizing Log and Grimoire entries"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "name": {
+      "type": "string",
+      "required": true,
+      "unique": true,
+      "minLength": 2,
+      "maxLength": 50
+    },
+    "slug": {
+      "type": "uid",
+      "targetField": "name",
+      "required": true
+    },
+    "logs": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::log.log",
+      "mappedBy": "tags"
+    },
+    "grimoires": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::grimoire.grimoire",
+      "mappedBy": "tags"
+    }
+  }
+}

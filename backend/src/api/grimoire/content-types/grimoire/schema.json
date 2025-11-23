@@ -1,0 +1,66 @@
+{
+  "kind": "collectionType",
+  "collectionName": "grimoires",
+  "info": {
+    "singularName": "grimoire",
+    "pluralName": "grimoires",
+    "displayName": "Grimoire",
+    "description": "Long-form articles, guides, and educational content"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "title": {
+      "type": "string",
+      "required": true,
+      "minLength": 3,
+      "maxLength": 200
+    },
+    "slug": {
+      "type": "uid",
+      "targetField": "title",
+      "required": true
+    },
+    "postType": {
+      "type": "string",
+      "default": "grimoire",
+      "private": false
+    },
+    "status": {
+      "type": "enumeration",
+      "enum": ["pending_ai", "draft_ready", "needs_changes", "published"],
+      "default": "pending_ai",
+      "required": true
+    },
+    "draftBody": {
+      "type": "richtext"
+    },
+    "publishedBody": {
+      "type": "richtext"
+    },
+    "excerpt": {
+      "type": "text",
+      "maxLength": 500
+    },
+    "author": {
+      "type": "string"
+    },
+    "heroImage": {
+      "type": "media",
+      "multiple": false,
+      "required": false,
+      "allowedTypes": ["images"]
+    },
+    "tags": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::tag.tag",
+      "inversedBy": "grimoires"
+    },
+    "category": {
+      "type": "string"
+    }
+  }
+}
