@@ -1,0 +1,38 @@
+{
+  "name": "alchemy-library-backend",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Strapi backend for The Alchemy Table Library",
+  "scripts": {
+    "develop": "strapi develop",
+    "start": "strapi start",
+    "build": "strapi build",
+    "strapi": "strapi",
+    "deploy": "strapi deploy"
+  },
+  "dependencies": {
+    "@strapi/strapi": "5.8.0",
+    "@strapi/plugin-users-permissions": "5.8.0",
+    "@strapi/plugin-i18n": "5.8.0",
+    "better-sqlite3": "11.8.1",
+    "pg": "^8.13.1",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-router-dom": "^6.28.0",
+    "styled-components": "^6.1.13",
+    "openai": "^4.77.3",
+    "nodemailer": "^6.9.16"
+  },
+  "devDependencies": {
+    "@types/node": "^20.17.10",
+    "@types/nodemailer": "^6.4.17",
+    "typescript": "^5.7.3"
+  },
+  "engines": {
+    "node": ">=18.0.0 <=22.x.x",
+    "npm": ">=6.0.0"
+  },
+  "strapi": {
+    "uuid": "alchemy-library-strapi"
+  }
+}

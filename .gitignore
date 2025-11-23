@@ -22,3 +22,18 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Backend / Strapi
+backend/.env
+backend/.tmp
+backend/.cache
+backend/build
+backend/dist
+backend/public/uploads/*
+!backend/public/uploads/.gitkeep
+backend/.strapi-updater.json
+backend/.strapi
+backend/*.cache
+backend/exports
+backend/license.txt
+backend/.strapi-cloud.json
