@@ -359,7 +359,6 @@ Content-Type: application/json
 {
   "@strapi/strapi": "5.8.0",
   "@strapi/plugin-users-permissions": "5.8.0",
-  "@strapi/plugin-i18n": "5.8.0",
   "better-sqlite3": "11.8.1",
   "pg": "^8.13.1",
   "openai": "^4.77.3",
