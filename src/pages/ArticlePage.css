@@ -1,0 +1,162 @@
+.article-page {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 2rem;
+  min-height: calc(100vh - 80px);
+}
+
+.breadcrumb {
+  margin-bottom: 2rem;
+}
+
+.breadcrumb a {
+  color: #667eea;
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.2s;
+}
+
+.breadcrumb a:hover {
+  color: #764ba2;
+}
+
+.article {
+  background: white;
+  border-radius: 8px;
+  padding: 3rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.article-header {
+  border-bottom: 2px solid #f0f0f0;
+  padding-bottom: 2rem;
+  margin-bottom: 2rem;
+}
+
+.article-meta {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.article-category {
+  background: #667eea;
+  color: white;
+  padding: 0.4rem 1rem;
+  border-radius: 16px;
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.article-date {
+  color: #888;
+  font-size: 0.95rem;
+}
+
+.article-header h1 {
+  font-size: 2.5rem;
+  color: #333;
+  margin-bottom: 0.5rem;
+  line-height: 1.2;
+}
+
+.article-author {
+  color: #666;
+  font-style: italic;
+  font-size: 1rem;
+}
+
+.article-content {
+  color: #444;
+  line-height: 1.8;
+  font-size: 1.05rem;
+}
+
+.article-content h1 {
+  font-size: 2rem;
+  color: #333;
+  margin: 2.5rem 0 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid #e0e0e0;
+}
+
+.article-content h1:first-child {
+  margin-top: 0;
+  padding-top: 0;
+  border-top: none;
+}
+
+.article-content h2 {
+  font-size: 1.6rem;
+  color: #333;
+  margin: 2rem 0 1rem;
+}
+
+.article-content h3 {
+  font-size: 1.3rem;
+  color: #333;
+  margin: 1.5rem 0 0.75rem;
+}
+
+.article-content p {
+  margin-bottom: 1.2rem;
+}
+
+.article-content li {
+  margin-left: 2rem;
+  margin-bottom: 0.75rem;
+}
+
+.article-content code {
+  background: #f5f5f5;
+  padding: 0.2rem 0.4rem;
+  border-radius: 3px;
+  font-family: 'Courier New', monospace;
+  font-size: 0.9em;
+  color: #d63384;
+}
+
+.article-content strong {
+  color: #333;
+  font-weight: 600;
+}
+
+.not-found {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 4rem 2rem;
+  text-align: center;
+}
+
+.not-found h1 {
+  font-size: 2.5rem;
+  color: #333;
+  margin-bottom: 1rem;
+}
+
+.not-found p {
+  font-size: 1.2rem;
+  color: #666;
+  margin-bottom: 2rem;
+}
+
+.not-found a {
+  color: #667eea;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+@media (max-width: 768px) {
+  .article-page {
+    padding: 1rem;
+  }
+  
+  .article {
+    padding: 2rem 1.5rem;
+  }
+  
+  .article-header h1 {
+    font-size: 2rem;
+  }
+}
