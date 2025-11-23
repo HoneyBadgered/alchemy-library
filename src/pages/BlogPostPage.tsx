@@ -39,18 +39,18 @@ export default function BlogPostPage() {
         
         <div className="post-content">
           {post.content.split('\n').map((line, index) => {
-            if (line.startsWith('# ')) {
-              return <h1 key={index}>{line.substring(2)}</h1>;
+            if (line.startsWith('### ')) {
+              return <h3 key={index}>{line.substring(4)}</h3>;
             } else if (line.startsWith('## ')) {
               return <h2 key={index}>{line.substring(3)}</h2>;
-            } else if (line.startsWith('### ')) {
-              return <h3 key={index}>{line.substring(4)}</h3>;
+            } else if (line.startsWith('# ')) {
+              return <h1 key={index}>{line.substring(2)}</h1>;
             } else if (line.startsWith('- ')) {
-              return <li key={index}>{line.substring(2)}</li>;
+              return <ul key={index}><li>{line.substring(2)}</li></ul>;
             } else if (line.trim() === '') {
               return <br key={index} />;
             } else if (line.match(/^\d+\./)) {
-              return <li key={index}>{line.substring(line.indexOf('.') + 2)}</li>;
+              return <ol key={index}><li>{line.substring(line.indexOf('.') + 2)}</li></ol>;
             } else {
               return <p key={index}>{line}</p>;
             }

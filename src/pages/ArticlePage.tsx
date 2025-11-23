@@ -40,18 +40,18 @@ export default function ArticlePage() {
         
         <div className="article-content">
           {article.content.split('\n').map((line, index) => {
-            if (line.startsWith('# ')) {
-              return <h1 key={index}>{line.substring(2)}</h1>;
-            } else if (line.startsWith('### ')) {
+            if (line.startsWith('### ')) {
               return <h3 key={index}>{line.substring(4)}</h3>;
             } else if (line.startsWith('## ')) {
               return <h2 key={index}>{line.substring(3)}</h2>;
+            } else if (line.startsWith('# ')) {
+              return <h1 key={index}>{line.substring(2)}</h1>;
             } else if (line.startsWith('- ')) {
-              return <li key={index}>{line.substring(2)}</li>;
+              return <ul key={index}><li>{line.substring(2)}</li></ul>;
             } else if (line.trim() === '') {
               return <br key={index} />;
             } else if (line.match(/^\d+\./)) {
-              return <li key={index}>{line.substring(line.indexOf('.') + 2)}</li>;
+              return <ol key={index}><li>{line.substring(line.indexOf('.') + 2)}</li></ol>;
             } else if (line.startsWith('`') && line.endsWith('`')) {
               return <code key={index}>{line.substring(1, line.length - 1)}</code>;
             } else {
