@@ -4,8 +4,7 @@
     "outDir": "dist",
     "rootDir": ".",
     "esModuleInterop": true,
-    "skipLibCheck": true,
-    "noEmitOnError": false
+    "skipLibCheck": true
   },
   "include": ["./", "./**/*.ts", "./**/*.js", "./**/*.json"],
   "exclude": ["node_modules", "build", ".cache", "dist", ".tmp"]
