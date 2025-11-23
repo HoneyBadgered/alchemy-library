@@ -36,7 +36,6 @@ export default factories.createCoreController('api::grimoire.grimoire', ({ strap
   // Reject draft
   async reject(ctx) {
     const { id } = ctx.params;
-    const { feedback } = ctx.request.body?.data || {};
 
     try {
       const updated = await strapi.entityService.update('api::grimoire.grimoire', id, {
@@ -44,9 +43,6 @@ export default factories.createCoreController('api::grimoire.grimoire', ({ strap
           status: 'needs_changes',
         },
       });
-
-      // Optionally send feedback notification
-      // await sendRejectionNotification({ ... });
 
       return { data: updated };
     } catch (error) {

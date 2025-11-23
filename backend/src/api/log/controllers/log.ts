@@ -36,7 +36,6 @@ export default factories.createCoreController('api::log.log', ({ strapi }) => ({
   // Reject draft
   async reject(ctx) {
     const { id } = ctx.params;
-    const { feedback } = ctx.request.body?.data || {};
 
     try {
       const updated = await strapi.entityService.update('api::log.log', id, {
@@ -44,9 +43,6 @@ export default factories.createCoreController('api::log.log', ({ strapi }) => ({
           status: 'needs_changes',
         },
       });
-
-      // Optionally send feedback notification
-      // await sendRejectionNotification({ ... });
 
       return { data: updated };
     } catch (error) {

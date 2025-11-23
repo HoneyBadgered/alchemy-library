@@ -10,6 +10,7 @@ export default function Navigation() {
         </Link>
         <div className="nav-links">
           <Link to="/" className="nav-link">Home</Link>
+          <Link to="/library" className="nav-link">Library</Link>
           <Link to="/log" className="nav-link">Log</Link>
           <Link to="/grimoire" className="nav-link">Grimoire</Link>
         </div>

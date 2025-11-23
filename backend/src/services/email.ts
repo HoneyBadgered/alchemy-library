@@ -22,14 +22,12 @@ export async function sendDraftNotification(params: DraftNotificationParams): Pr
   const { id, title, postType, draftBody } = params;
 
   const baseUrl = process.env.BASE_URL || 'http://localhost:1337';
-  const frontendUrl = process.env.FRONTEND_BASE_URL || 'http://localhost:5173';
   const adminEmail = process.env.ADMIN_EMAIL || 'admin@example.com';
 
   // Generate approve/reject URLs
   const approveUrl = `${baseUrl}/api/${postType}s/${id}/approve`;
   const rejectUrl = `${baseUrl}/api/${postType}s/${id}/reject`;
   const editUrl = `${baseUrl}/admin/content-manager/collection-types/api::${postType}.${postType}/${id}`;
-  const previewUrl = `${frontendUrl}/library/${postType}/${id}/preview`;
 
   // Truncate draft for email preview
   const draftPreview = draftBody.substring(0, 500) + (draftBody.length > 500 ? '...' : '');

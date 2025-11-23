@@ -74,9 +74,10 @@ export async function generateDraft(params: GenerateDraftParams): Promise<string
     }
 
     return content;
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('OpenAI API error:', error);
-    throw new Error(`Failed to generate AI content: ${error.message}`);
+    const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+    throw new Error(`Failed to generate AI content: ${errorMessage}`);
   }
 }
 
