@@ -163,12 +163,15 @@ class StrapiAPI {
     slug: string,
     type?: 'log' | 'grimoire'
   ): Promise<NormalizedPost | null> {
+    // URL encode the slug to prevent injection
+    const encodedSlug = encodeURIComponent(slug);
+    
     if (type) {
       // Search in specific collection
       const endpoint =
         type === 'log'
-          ? `/logs?filters[slug][$eq]=${slug}&filters[status][$eq]=published&populate=tags`
-          : `/grimoires?filters[slug][$eq]=${slug}&filters[status][$eq]=published&populate[tags]=*&populate[heroImage]=*`;
+          ? `/logs?filters[slug][$eq]=${encodedSlug}&filters[status][$eq]=published&populate=tags`
+          : `/grimoires?filters[slug][$eq]=${encodedSlug}&filters[status][$eq]=published&populate[tags]=*&populate[heroImage]=*`;
 
       const response = await this.fetch<
         StrapiResponse<(StrapiLog | StrapiGrimoire)[]>
@@ -184,7 +187,7 @@ class StrapiAPI {
     // Search both collections
     try {
       const logResponse = await this.fetch<StrapiResponse<StrapiLog[]>>(
-        `/logs?filters[slug][$eq]=${slug}&filters[status][$eq]=published&populate=tags`
+        `/logs?filters[slug][$eq]=${encodedSlug}&filters[status][$eq]=published&populate=tags`
       );
 
       if (logResponse.data.length > 0) {
@@ -198,7 +201,7 @@ class StrapiAPI {
       const grimoireResponse = await this.fetch<
         StrapiResponse<StrapiGrimoire[]>
       >(
-        `/grimoires?filters[slug][$eq]=${slug}&filters[status][$eq]=published&populate[tags]=*&populate[heroImage]=*`
+        `/grimoires?filters[slug][$eq]=${encodedSlug}&filters[status][$eq]=published&populate[tags]=*&populate[heroImage]=*`
       );
 
       if (grimoireResponse.data.length > 0) {

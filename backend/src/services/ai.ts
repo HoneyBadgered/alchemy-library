@@ -75,8 +75,16 @@ export async function generateDraft(params: GenerateDraftParams): Promise<string
 
     return content;
   } catch (error: unknown) {
-    console.error('OpenAI API error:', error);
     const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+    
+    // Log to console for now since strapi may not be available in this context
+    // In production, this service should be called from Strapi context where strapi.log is available
+    if (typeof strapi !== 'undefined' && strapi.log) {
+      strapi.log.error('OpenAI API error:', error);
+    } else {
+      console.error('OpenAI API error:', error);
+    }
+    
     throw new Error(`Failed to generate AI content: ${errorMessage}`);
   }
 }
