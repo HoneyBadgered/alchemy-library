@@ -99,6 +99,17 @@ npm run develop
 
 Open your browser to `http://localhost:1337/admin` and create your first admin user.
 
+8. **If status dropdown is missing options (only shows 3 instead of 5 statuses):**
+
+```bash
+# Clear cache and rebuild admin panel
+npm run clear-cache
+# Then restart
+npm run develop
+```
+
+This ensures the admin panel reflects all 5 status values: `draft`, `pending_ai`, `draft_ready`, `needs_changes`, `published`.
+
 ---
 
 ## Database Configuration
@@ -502,6 +513,24 @@ npm run develop
 ### Permission errors
 - Check Settings → Users & Permissions → Roles
 - Ensure Public role has `find` and `findOne` enabled for published content
+
+### Admin panel not showing all status options
+
+If the admin panel dropdown is only showing "draft", "draft_ready", and "pending_ai" instead of all 5 status values ("draft", "pending_ai", "draft_ready", "needs_changes", "published"):
+
+**Solution:** Clear the Strapi cache and rebuild the admin panel:
+
+```bash
+# Quick solution: use the provided script
+./clear-cache.sh
+
+# Or manually:
+rm -rf .cache build dist
+npm run build
+npm run develop
+```
+
+This issue occurs when Strapi's admin panel cache doesn't reflect recent schema changes. After clearing the cache and rebuilding, all 5 status options should appear in the dropdown.
 
 ---
 
