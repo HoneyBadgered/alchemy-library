@@ -50,13 +50,16 @@ export default {
     
     // Check if status is being changed to 'published'
     if (params.data.status === 'published') {
-      // Fetch the current entry to get draftBody
-      const entry = await strapi.entityService.findOne('api::log.log', params.where.id);
-      
-      // If draftBody exists and publishedBody is empty, copy draftBody to publishedBody
-      if (entry && entry.draftBody && !params.data.publishedBody) {
-        params.data.publishedBody = entry.draftBody;
-        strapi.log.info(`Auto-copying draftBody to publishedBody for Log #${params.where.id}`);
+      // Only proceed if publishedBody is not already being set
+      if (!params.data.publishedBody) {
+        // Fetch the current entry to get draftBody
+        const entry = await strapi.entityService.findOne('api::log.log', params.where.id);
+        
+        // If draftBody exists, copy it to publishedBody
+        if (entry?.draftBody) {
+          params.data.publishedBody = entry.draftBody;
+          strapi.log.info(`Auto-copying draftBody to publishedBody for Log #${params.where.id}`);
+        }
       }
     }
   },
