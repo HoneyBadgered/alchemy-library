@@ -5,7 +5,7 @@ export default function HomePage() {
   return (
     <div className="home-page">
       <section className="hero">
-        <div className="hero-content">
+        {/* <div className="hero-content">
           <h1 className="hero-title">Welcome to the Alchemy Library</h1>
           <p className="hero-subtitle">
             Your Blend. Your Crafted Magic.
@@ -13,7 +13,7 @@ export default function HomePage() {
           <p className="hero-description">
             Welcome to the Library—your ever-growing archive of knowledge, rituals, stories, and discoveries. Here, curiosity is the compass and inspiration is the reward. Wander through articles, guides, logs, and grimoire entries that illuminate the world of herbs, flavor, creativity, and craft. Whether you’re seeking deep dives, quick insights, or a spark of magic for your next creation, this is your sacred space to learn, explore, and expand your craft.
           </p>
-        </div>
+        </div> */}
       </section>
 
       <section className="sections">

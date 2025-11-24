@@ -5,14 +5,23 @@
 }
 
 :root {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
+  /* Typography */
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 
+    'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 
+    'Helvetica Neue', sans-serif;
   line-height: 1.6;
   font-weight: 400;
   
-  color: #333;
-  background-color: #f8f9fa;
+  /* Brand Colors */
+  --green: #14513A;
+  --black: #070709;
+  --gold: #F3B84A;
+  --violet: #2E2342;
+  --moon: #E3DFE6;
+
+  /* Base UI Colors */
+  color: var(--moon);
+  background-color: var(--black);
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -24,26 +33,33 @@ body {
   margin: 0;
   min-width: 320px;
   min-height: 100vh;
+  background-color: var(--black);
+  color: var(--moon);
 }
 
 #root {
   min-height: 100vh;
 }
 
+/* Links */
 a {
-  color: #667eea;
+  color: var(--gold);
   text-decoration: none;
+  transition: color 0.25s;
 }
 
 a:hover {
-  color: #764ba2;
+  color: var(--moon);
 }
 
+/* Headings */
 h1, h2, h3, h4, h5, h6 {
   line-height: 1.2;
   font-weight: 600;
+  color: var(--moon);
 }
 
+/* Buttons */
 button {
   border-radius: 8px;
   border: 1px solid transparent;
@@ -51,19 +67,22 @@ button {
   font-size: 1em;
   font-weight: 500;
   font-family: inherit;
-  background-color: #667eea;
-  color: white;
+  
+  background-color: var(--green);
+  color: var(--moon);
+  
   cursor: pointer;
-  transition: background-color 0.25s;
+  transition: background-color 0.25s, border-color 0.25s;
 }
 
 button:hover {
-  background-color: #764ba2;
+  background-color: var(--violet);
+  border-color: var(--gold);
 }
 
 button:focus,
 button:focus-visible {
-  outline: 2px solid #667eea;
+  outline: 2px solid var(--gold);
   outline-offset: 2px;
 }
 
