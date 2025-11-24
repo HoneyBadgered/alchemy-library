@@ -99,6 +99,21 @@ npm run develop
 
 Open your browser to `http://localhost:1337/admin` and create your first admin user.
 
+8. **If status dropdown is missing options (only shows 3 instead of 5 statuses):**
+
+This issue occurs when the database schema doesn't match the current schema definitions. You need to reset the database in development:
+
+```bash
+# DEVELOPMENT ONLY - This deletes all data!
+npm run reset-db
+npm run clear-cache
+npm run develop
+```
+
+After restarting Strapi, you'll need to create a new admin user. The status dropdown will now show all 5 values: `draft`, `pending_ai`, `draft_ready`, `needs_changes`, `published`.
+
+**Note:** In production, you would need to run a database migration instead of resetting the database.
+
 ---
 
 ## Database Configuration
@@ -502,6 +517,31 @@ npm run develop
 ### Permission errors
 - Check Settings → Users & Permissions → Roles
 - Ensure Public role has `find` and `findOne` enabled for published content
+
+### Admin panel not showing all status options
+
+If the admin panel dropdown is only showing "draft", "draft_ready", and "pending_ai" instead of all 5 status values ("draft", "pending_ai", "draft_ready", "needs_changes", "published"):
+
+**Root Cause:** This happens when the database schema was created with an older version of the schema that had fewer enum values. Strapi doesn't automatically update database constraints when you change enum values in schema.json.
+
+**Solution (Development):** Reset the database and clear cache:
+
+```bash
+# DEVELOPMENT ONLY - Deletes all data!
+npm run reset-db
+npm run clear-cache
+npm run develop
+```
+
+After Strapi restarts, create a new admin user. All 5 status options will now appear.
+
+**Solution (Production):** For production databases with existing data, consult the Strapi documentation on [database migrations](https://docs.strapi.io/) or contact your database administrator. Enum constraints must be updated at the database level.
+
+**Alternative:** Use the interactive script:
+```bash
+chmod +x clear-cache.sh  # Only needed once
+./clear-cache.sh  # Will prompt you to reset database
+```
 
 ---
 
