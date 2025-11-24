@@ -31,12 +31,12 @@ export default {
         strapi.log.info(`Database initialized - Grimoires: ${grimoireCount}, Logs: ${logCount}`);
         
         // Check if we can query entries with 'published' status
-        const publishedGrimoires = await strapi.entityService.findMany('api::grimoire.grimoire', {
+        await strapi.entityService.findMany('api::grimoire.grimoire', {
           filters: { status: 'published' },
           limit: 1,
         });
         
-        const publishedLogs = await strapi.entityService.findMany('api::log.log', {
+        await strapi.entityService.findMany('api::log.log', {
           filters: { status: 'published' },
           limit: 1,
         });
