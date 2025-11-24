@@ -521,7 +521,11 @@ If the admin panel dropdown is only showing "draft", "draft_ready", and "pending
 **Solution:** Clear the Strapi cache and rebuild the admin panel:
 
 ```bash
-# Quick solution: use the provided script
+# Recommended: use the npm script
+npm run clear-cache
+
+# Alternative: use the provided script (may need to make it executable first)
+chmod +x clear-cache.sh  # Only needed once
 ./clear-cache.sh
 
 # Or manually:
