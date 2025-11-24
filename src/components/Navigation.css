@@ -71,13 +71,13 @@
   .nav-links {
     gap: 1rem;
   }
-  
+
   .nav-links-left,
   .nav-links-right {
     order: 3;
     justify-content: center;
   }
-  
+
   .nav-logo {
     order: 1;
   }
