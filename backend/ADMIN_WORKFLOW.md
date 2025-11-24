@@ -558,6 +558,27 @@ published      → Live on your site
 2. Check user permissions
 3. Review error messages
 
+### Status Dropdown Only Shows 3 Options
+
+**Problem:** The status dropdown in the admin panel only shows "draft", "draft_ready", and "pending_ai" instead of all 5 options.
+
+**Cause:** Strapi's admin panel cache is out of sync with the schema.
+
+**Solution:**
+```bash
+# In the backend directory, run:
+npm run clear-cache
+# Then restart Strapi:
+npm run develop
+```
+
+After clearing the cache, all 5 status options should appear:
+- `draft` - Manual draft (you write content)
+- `pending_ai` - AI is generating content
+- `draft_ready` - AI draft ready for review
+- `needs_changes` - Rejected or needs editing
+- `published` - Live on website
+
 ---
 
 ## Advanced Features
