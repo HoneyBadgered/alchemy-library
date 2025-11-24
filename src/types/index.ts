@@ -71,7 +71,7 @@ export interface LogAttributes {
   title: string;
   slug: string;
   postType: 'log';
-  status: 'pending_ai' | 'draft_ready' | 'needs_changes' | 'published';
+  status: 'draft' | 'pending_ai' | 'draft_ready' | 'needs_changes' | 'published';
   draftBody?: string;
   publishedBody?: string;
   excerpt?: string;
@@ -87,7 +87,7 @@ export interface GrimoireAttributes {
   title: string;
   slug: string;
   postType: 'grimoire';
-  status: 'pending_ai' | 'draft_ready' | 'needs_changes' | 'published';
+  status: 'draft' | 'pending_ai' | 'draft_ready' | 'needs_changes' | 'published';
   draftBody?: string;
   publishedBody?: string;
   excerpt?: string;

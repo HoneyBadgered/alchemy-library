@@ -403,10 +403,10 @@ export interface ApiGrimoireGrimoire extends Struct.CollectionTypeSchema {
     publishedBody: Schema.Attribute.RichText;
     slug: Schema.Attribute.UID<'title'> & Schema.Attribute.Required;
     status: Schema.Attribute.Enumeration<
-      ['pending_ai', 'draft_ready', 'needs_changes', 'published']
+      ['draft', 'pending_ai', 'draft_ready', 'needs_changes', 'published']
     > &
       Schema.Attribute.Required &
-      Schema.Attribute.DefaultTo<'pending_ai'>;
+      Schema.Attribute.DefaultTo<'draft'>;
     tags: Schema.Attribute.Relation<'manyToMany', 'api::tag.tag'>;
     title: Schema.Attribute.String &
       Schema.Attribute.Required &
@@ -449,10 +449,10 @@ export interface ApiLogLog extends Struct.CollectionTypeSchema {
     publishedBody: Schema.Attribute.RichText;
     slug: Schema.Attribute.UID<'title'> & Schema.Attribute.Required;
     status: Schema.Attribute.Enumeration<
-      ['pending_ai', 'draft_ready', 'needs_changes', 'published']
+      ['draft', 'pending_ai', 'draft_ready', 'needs_changes', 'published']
     > &
       Schema.Attribute.Required &
-      Schema.Attribute.DefaultTo<'pending_ai'>;
+      Schema.Attribute.DefaultTo<'draft'>;
     tags: Schema.Attribute.Relation<'manyToMany', 'api::tag.tag'>;
     title: Schema.Attribute.String &
       Schema.Attribute.Required &
