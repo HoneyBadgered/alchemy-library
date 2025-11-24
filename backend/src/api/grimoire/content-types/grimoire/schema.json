@@ -30,8 +30,8 @@
     },
     "status": {
       "type": "enumeration",
-      "enum": ["pending_ai", "draft_ready", "needs_changes", "published"],
-      "default": "pending_ai",
+      "enum": ["draft", "pending_ai", "draft_ready", "needs_changes", "published"],
+      "default": "draft",
       "required": true
     },
     "draftBody": {
