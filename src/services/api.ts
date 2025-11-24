@@ -100,13 +100,13 @@ class StrapiAPI {
   }): Promise<{ data: NormalizedPost[]; pagination: { total: number } }> {
     const { page = 1, pageSize = 25 } = params || {};
 
-    // Fetch both logs and grimoires (using Strapi's built-in publicationState)
+    // Fetch both logs and grimoires (using Strapi 5's status parameter for draft/publish filtering)
     const [logsResponse, grimoiresResponse] = await Promise.all([
       this.fetch<StrapiResponse<StrapiLog[]>>(
-        `/logs?publicationState=live&populate=tags&sort=createdAt:desc&pagination[page]=${page}&pagination[pageSize]=${pageSize}`
+        `/logs?status=published&populate=tags&sort=createdAt:desc&pagination[page]=${page}&pagination[pageSize]=${pageSize}`
       ),
       this.fetch<StrapiResponse<StrapiGrimoire[]>>(
-        `/grimoires?publicationState=live&populate[tags]=*&populate[heroImage]=*&sort=createdAt:desc&pagination[page]=${page}&pagination[pageSize]=${pageSize}`
+        `/grimoires?status=published&populate[tags]=*&populate[heroImage]=*&sort=createdAt:desc&pagination[page]=${page}&pagination[pageSize]=${pageSize}`
       ),
     ]);
 
@@ -137,7 +137,7 @@ class StrapiAPI {
     const { page = 1, pageSize = 25 } = params || {};
 
     const response = await this.fetch<StrapiResponse<StrapiLog[]>>(
-      `/logs?publicationState=live&populate=tags&sort=createdAt:desc&pagination[page]=${page}&pagination[pageSize]=${pageSize}`
+      `/logs?status=published&populate=tags&sort=createdAt:desc&pagination[page]=${page}&pagination[pageSize]=${pageSize}`
     );
 
     return {
@@ -154,7 +154,7 @@ class StrapiAPI {
     const { page = 1, pageSize = 25 } = params || {};
 
     const response = await this.fetch<StrapiResponse<StrapiGrimoire[]>>(
-      `/grimoires?publicationState=live&populate[tags]=*&populate[heroImage]=*&sort=createdAt:desc&pagination[page]=${page}&pagination[pageSize]=${pageSize}`
+      `/grimoires?status=published&populate[tags]=*&populate[heroImage]=*&sort=createdAt:desc&pagination[page]=${page}&pagination[pageSize]=${pageSize}`
     );
 
     return {
@@ -175,8 +175,8 @@ class StrapiAPI {
       // Search in specific collection
       const endpoint =
         type === 'log'
-          ? `/logs?filters[slug][$eq]=${encodedSlug}&publicationState=live&populate=tags`
-          : `/grimoires?filters[slug][$eq]=${encodedSlug}&publicationState=live&populate[tags]=*&populate[heroImage]=*`;
+          ? `/logs?filters[slug][$eq]=${encodedSlug}&status=published&populate=tags`
+          : `/grimoires?filters[slug][$eq]=${encodedSlug}&status=published&populate[tags]=*&populate[heroImage]=*`;
 
       const response = await this.fetch<
         StrapiResponse<(StrapiLog | StrapiGrimoire)[]>
@@ -192,7 +192,7 @@ class StrapiAPI {
     // Search both collections
     try {
       const logResponse = await this.fetch<StrapiResponse<StrapiLog[]>>(
-        `/logs?filters[slug][$eq]=${encodedSlug}&publicationState=live&populate=tags`
+        `/logs?filters[slug][$eq]=${encodedSlug}&status=published&populate=tags`
       );
 
       if (logResponse.data.length > 0) {
@@ -206,7 +206,7 @@ class StrapiAPI {
       const grimoireResponse = await this.fetch<
         StrapiResponse<StrapiGrimoire[]>
       >(
-        `/grimoires?filters[slug][$eq]=${encodedSlug}&publicationState=live&populate[tags]=*&populate[heroImage]=*`
+        `/grimoires?filters[slug][$eq]=${encodedSlug}&status=published&populate[tags]=*&populate[heroImage]=*`
       );
 
       if (grimoireResponse.data.length > 0) {

@@ -159,11 +159,13 @@ export interface NormalizedPost {
 
 ## API Service Layer
 
-The API service uses Strapi's built-in draft/publish system via the `publicationState=live` query parameter to fetch only published content.
+The API service uses Strapi 5's built-in draft/publish system via the `status=published` query parameter to fetch only published content.
 
 **Key endpoints:**
-- `/api/logs?publicationState=live` - Published logs
-- `/api/grimoires?publicationState=live` - Published grimoires
+- `/api/logs?status=published` - Published logs
+- `/api/grimoires?status=published` - Published grimoires
+
+**Note:** In Strapi v4, the parameter was `publicationState=live`, but this was replaced with `status=published` in Strapi 5.
 
 See `src/services/api.ts` for the full implementation.
 
