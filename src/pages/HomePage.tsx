@@ -6,14 +6,12 @@ export default function HomePage() {
     <div className="home-page">
       <section className="hero">
         <div className="hero-content">
-          <h1 className="hero-title">🧪 Welcome to the Alchemy Library</h1>
+          <h1 className="hero-title">Welcome to the Alchemy Library</h1>
           <p className="hero-subtitle">
-            A curated collection of knowledge, insights, and discoveries
+            Your Blend. Your Crafted Magic.
           </p>
           <p className="hero-description">
-            Explore our growing repository of blog posts and evergreen articles. 
-            Whether you're looking for the latest updates or timeless guides, 
-            you'll find valuable content to enhance your understanding.
+            Welcome to the Library—your ever-growing archive of knowledge, rituals, stories, and discoveries. Here, curiosity is the compass and inspiration is the reward. Wander through articles, guides, logs, and grimoire entries that illuminate the world of herbs, flavor, creativity, and craft. Whether you’re seeking deep dives, quick insights, or a spark of magic for your next creation, this is your sacred space to learn, explore, and expand your craft.
           </p>
         </div>
       </section>
