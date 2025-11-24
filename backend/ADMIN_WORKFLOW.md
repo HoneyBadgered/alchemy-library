@@ -44,28 +44,43 @@ This guide explains how to use the Strapi admin panel to create, manage, and pub
 2. Click **Log** under Collection Types
 3. Click **Create new entry** button
 
-#### Step 2: Fill Required Fields
+#### Step 2: Choose Your Workflow
 
-**Minimal Setup (for AI generation):**
+You can create posts in two ways:
+
+**Option A: AI-Generated Content**
 ```
 Title: "Your Post Title Here"
 Status: pending_ai (select from dropdown)
+Excerpt: Brief description (helps AI understand context) - optional
 ```
 
-That's it! The AI will generate the draft automatically.
+The AI will generate the draft automatically, and you'll receive an email when ready.
 
-**Optional Fields:**
+**Option B: Manual Content Creation**
 ```
-Excerpt: Brief description (helps AI understand context)
-Author: Your name (will default if not set)
-Tags: Select existing tags or create new ones
+Title: "Your Post Title Here"
+Status: draft (default - select from dropdown)
+Draft Body: Write your content directly in the rich text editor
+Excerpt: Brief description - optional
+Author: Your name - optional
+Tags: Select existing tags or create new ones - optional
 ```
+
+Write your own content without AI assistance. You can publish immediately or save as draft for later editing.
 
 #### Step 3: Save
 
+**For AI-Generated Posts:**
 1. Click **Save** button (top right)
 2. AI workflow triggers automatically
 3. You'll receive an email when draft is ready
+
+**For Manual Posts:**
+1. Click **Save** button (top right)
+2. Your post is saved as a draft
+3. Edit the content as needed
+4. Change status to `published` when ready to publish
 
 ---
 
@@ -77,28 +92,46 @@ Tags: Select existing tags or create new ones
 2. Click **Grimoire** under Collection Types
 3. Click **Create new entry** button
 
-#### Step 2: Fill Required Fields
+#### Step 2: Choose Your Workflow
 
-**Minimal Setup:**
+You can create articles in two ways:
+
+**Option A: AI-Generated Content**
 ```
 Title: "Your Article Title Here"
 Status: pending_ai
+Category: Choose category (Guides, Technical, Education, etc.) - optional but recommended
+Excerpt: Brief description for better AI context - optional
 ```
 
-**Additional Fields (optional but recommended):**
+The AI will generate comprehensive long-form content automatically.
+
+**Option B: Manual Content Creation**
 ```
-Category: Choose category (Guides, Technical, Education, etc.)
-Excerpt: Brief description for better AI context
-Author: Your name
-Hero Image: Upload featured image
-Tags: Select relevant tags
+Title: "Your Article Title Here"
+Status: draft (default)
+Draft Body: Write your content directly in the rich text editor
+Category: Choose category - optional
+Excerpt: Brief description - optional
+Author: Your name - optional
+Hero Image: Upload featured image - optional
+Tags: Select relevant tags - optional
 ```
 
-#### Step 3: Save and Generate
+Write your own article without AI assistance. Perfect for when you want complete control over the content.
 
+#### Step 3: Save
+
+**For AI-Generated Articles:**
 1. Click **Save**
 2. AI generates comprehensive long-form content
 3. Check email for draft notification
+
+**For Manual Articles:**
+1. Click **Save**
+2. Your article is saved as a draft
+3. Edit and refine the content as needed
+4. Change status to `published` when ready to publish
 
 ---
 
@@ -395,7 +428,7 @@ Use appropriate format in frontend for performance.
 1. Open Content Manager → Log or Grimoire
 2. Click **Filters** button
 3. Select **Status** filter
-4. Choose: `pending_ai`, `draft_ready`, `needs_changes`, or `published`
+4. Choose: `draft`, `pending_ai`, `draft_ready`, `needs_changes`, or `published`
 
 #### By Date
 
@@ -450,8 +483,9 @@ Select multiple entries:
 
 At a glance:
 ```
+draft          → Manual draft (you write the content)
 pending_ai     → Waiting for AI generation
-draft_ready    → Needs your review
+draft_ready    → AI draft generated, needs your review
 needs_changes  → Rejected or needs work
 published      → Live on your site
 ```
@@ -570,16 +604,23 @@ Now that you understand the workflow:
 
 ### Entry Lifecycle
 
+**AI-Powered Workflow:**
 ```
 Create → pending_ai → draft_ready → published
                          ↓
                    needs_changes → edit/regenerate
 ```
 
+**Manual Workflow:**
+```
+Create → draft → edit content → published
+```
+
 ### Status Meanings
 
+- `draft`: Manual draft (you write the content yourself)
 - `pending_ai`: AI generating content
-- `draft_ready`: Ready for your review
+- `draft_ready`: AI draft generated, ready for your review
 - `needs_changes`: Needs editing or regeneration
 - `published`: Live on website
 
