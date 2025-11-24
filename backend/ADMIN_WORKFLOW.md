@@ -562,22 +562,29 @@ published      → Live on your site
 
 **Problem:** The status dropdown in the admin panel only shows "draft", "draft_ready", and "pending_ai" instead of all 5 options.
 
-**Cause:** Strapi's admin panel cache is out of sync with the schema.
+**Cause:** The database schema was created with an older version that had fewer enum values. Strapi doesn't automatically update database enum constraints when schema.json changes.
 
-**Solution:**
+**Solution (Development - Deletes all data!):**
 ```bash
 # In the backend directory, run:
+npm run reset-db
 npm run clear-cache
-# Then restart Strapi:
 npm run develop
 ```
 
-After clearing the cache, all 5 status options should appear:
+After Strapi restarts, create a new admin user. All 5 status options will now appear:
 - `draft` - Manual draft (you write content)
 - `pending_ai` - AI is generating content
 - `draft_ready` - AI draft ready for review
 - `needs_changes` - Rejected or needs editing
 - `published` - Live on website
+
+**Alternative:** Use the interactive script that will prompt you:
+```bash
+./clear-cache.sh
+```
+
+**Important:** This resets your development database. In production, you would need a proper database migration.
 
 ---
 

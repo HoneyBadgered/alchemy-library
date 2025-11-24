@@ -101,14 +101,18 @@ Open your browser to `http://localhost:1337/admin` and create your first admin u
 
 8. **If status dropdown is missing options (only shows 3 instead of 5 statuses):**
 
+This issue occurs when the database schema doesn't match the current schema definitions. You need to reset the database in development:
+
 ```bash
-# Clear cache and rebuild admin panel
+# DEVELOPMENT ONLY - This deletes all data!
+npm run reset-db
 npm run clear-cache
-# Then restart
 npm run develop
 ```
 
-This ensures the admin panel reflects all 5 status values: `draft`, `pending_ai`, `draft_ready`, `needs_changes`, `published`.
+After restarting Strapi, you'll need to create a new admin user. The status dropdown will now show all 5 values: `draft`, `pending_ai`, `draft_ready`, `needs_changes`, `published`.
+
+**Note:** In production, you would need to run a database migration instead of resetting the database.
 
 ---
 
@@ -518,23 +522,38 @@ npm run develop
 
 If the admin panel dropdown is only showing "draft", "draft_ready", and "pending_ai" instead of all 5 status values ("draft", "pending_ai", "draft_ready", "needs_changes", "published"):
 
-**Solution:** Clear the Strapi cache and rebuild the admin panel:
+**Root Cause:** This happens when the database schema was created with an older version of the schema that had fewer enum values. Strapi doesn't automatically update database constraints when you change enum values in schema.json.
+
+**Solution (Development):** Reset the database and clear cache:
 
 ```bash
-# Recommended: use the npm script
+# DEVELOPMENT ONLY - Deletes all data!
+npm run reset-db
 npm run clear-cache
-
-# Alternative: use the provided script (may need to make it executable first)
-chmod +x clear-cache.sh  # Only needed once
-./clear-cache.sh
-
-# Or manually:
-rm -rf .cache build dist
-npm run build
 npm run develop
 ```
 
-This issue occurs when Strapi's admin panel cache doesn't reflect recent schema changes. After clearing the cache and rebuilding, all 5 status options should appear in the dropdown.
+After Strapi restarts, create a new admin user. All 5 status options will now appear.
+
+**Solution (Production):** For production databases with existing data, you need to manually update the database constraints:
+
+For SQLite:
+```sql
+-- This requires recreating the table with the new enum constraint
+-- Backup your data first!
+```
+
+For PostgreSQL:
+```sql
+-- Add the missing enum values to the constraint
+-- Contact your database administrator
+```
+
+**Alternative:** Use the interactive script:
+```bash
+chmod +x clear-cache.sh  # Only needed once
+./clear-cache.sh  # Will prompt you to reset database
+```
 
 ---
 

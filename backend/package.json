@@ -9,7 +9,8 @@
     "build": "strapi build",
     "strapi": "strapi",
     "deploy": "strapi deploy",
-    "clear-cache": "rm -rf .cache build dist && npm run build"
+    "clear-cache": "rm -rf .cache build dist && npm run build",
+    "reset-db": "rm -f .tmp/data.db && echo 'Database reset! Run npm run develop to recreate.'"
   },
   "dependencies": {
     "@strapi/plugin-users-permissions": "5.8.0",
