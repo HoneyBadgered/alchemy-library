@@ -586,6 +586,47 @@ After Strapi restarts, create a new admin user. All 5 status options will now ap
 
 **Important:** This resets your development database. In production, you would need a proper database migration.
 
+### Published Status Disappears After Editing publishedBody
+
+**Problem:** When you manually add or edit text in the `publishedBody` field, the "published" option disappears from the status dropdown.
+
+**Cause:** This is related to the database enum constraint issue above. When you edit a field in Strapi's admin panel, it refreshes the form and re-queries the database for valid enum values. If the database has old CHECK constraints that don't include 'published', it will be filtered out of the dropdown.
+
+**Diagnosis:**
+```bash
+# Run the diagnostic script to check your database:
+npm run diagnose-db
+```
+
+This script will:
+- Check if all expected enum values are in the database schema
+- Show which values are missing
+- Create a backup of your database
+- Provide specific fix instructions
+
+**Solution:**
+
+Same as above - you need to reset the database to update the enum constraints:
+
+```bash
+npm run reset-db
+npm run clear-cache
+npm run develop
+```
+
+**Why this happens:**
+1. You create/edit an entry and add text to `publishedBody`
+2. Strapi auto-saves or refreshes the form
+3. Strapi queries the database to populate the status dropdown
+4. SQLite returns only the enum values that exist in its CHECK constraint
+5. If 'published' wasn't in the original schema when the DB was created, it's not in the constraint
+6. The dropdown only shows the constrained values
+
+**Prevention:**
+- Always create your database with the latest schema.json files
+- Don't modify enum values after creating the database (SQLite doesn't support this well)
+- Use the reset-db script when schema changes occur
+
 ---
 
 ## Advanced Features
