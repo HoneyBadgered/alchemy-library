@@ -70,14 +70,12 @@ export interface StrapiError {
 export interface LogAttributes {
   title: string;
   slug: string;
-  postType: 'log';
-  status: 'draft' | 'pending_ai' | 'draft_ready' | 'needs_changes' | 'published';
-  draftBody?: string;
-  publishedBody?: string;
+  body?: string;
   excerpt?: string;
   author?: string;
   createdAt: string;
   updatedAt: string;
+  publishedAt?: string;
   tags?: {
     data: StrapiTag[];
   };
@@ -86,15 +84,13 @@ export interface LogAttributes {
 export interface GrimoireAttributes {
   title: string;
   slug: string;
-  postType: 'grimoire';
-  status: 'draft' | 'pending_ai' | 'draft_ready' | 'needs_changes' | 'published';
-  draftBody?: string;
-  publishedBody?: string;
+  body?: string;
   excerpt?: string;
   author?: string;
   category?: string;
   createdAt: string;
   updatedAt: string;
+  publishedAt?: string;
   heroImage?: {
     data: StrapiImage | null;
   };
@@ -122,13 +118,13 @@ export interface NormalizedPost {
   type: 'log' | 'grimoire';
   title: string;
   slug: string;
-  status: 'draft' | 'pending_ai' | 'draft_ready' | 'needs_changes' | 'published';
   excerpt?: string;
   content: string;
   author?: string;
   category?: string;
   createdAt: string;
   updatedAt: string;
+  publishedAt?: string;
   heroImage?: string;
   tags: Array<{
     id: number;
