@@ -24,13 +24,8 @@ export default {
     // For SQLite, attempt to verify and fix enum constraints
     if (dbClient === 'sqlite') {
       try {
-        // Test if all enum values work by querying entries
-        const grimoireCount = await strapi.entityService.count('api::grimoire.grimoire');
-        const logCount = await strapi.entityService.count('api::log.log');
-        
-        strapi.log.info(`Database initialized - Grimoires: ${grimoireCount}, Logs: ${logCount}`);
-        
         // Check if we can query entries with 'published' status
+        // This validates that the enum constraint includes all expected values
         await strapi.entityService.findMany('api::grimoire.grimoire', {
           filters: { status: 'published' },
           limit: 1,

@@ -16,12 +16,24 @@
 
 const fs = require('fs');
 const path = require('path');
-const sqlite3 = require('better-sqlite3');
 
 const DB_PATH = path.join(__dirname, '..', '.tmp', 'data.db');
 const BACKUP_PATH = path.join(__dirname, '..', '.tmp', `data.backup.${Date.now()}.db`);
 
 const EXPECTED_ENUM_VALUES = ['draft', 'pending_ai', 'draft_ready', 'needs_changes', 'published'];
+const SCHEMA_PREVIEW_LENGTH = 200; // Characters to show when displaying schema
+
+// Check if better-sqlite3 is available
+let sqlite3;
+try {
+  sqlite3 = require('better-sqlite3');
+} catch (error) {
+  console.error('\n❌ Error: better-sqlite3 package is not installed.\n');
+  console.error('Please install it first:');
+  console.error('  npm install better-sqlite3\n');
+  console.error('Or run this from the backend directory where it\'s already installed.\n');
+  process.exit(1);
+}
 
 async function main() {
   console.log('╔═══════════════════════════════════════╗');
@@ -58,7 +70,7 @@ async function main() {
     if (grimoireSchema) {
       console.log('📋 Grimoire Table:');
       const sql = grimoireSchema.sql;
-      console.log(sql.substring(0, 200) + '...\n');
+      console.log(sql.substring(0, SCHEMA_PREVIEW_LENGTH) + '...\n');
       
       // Check if all enum values are in the schema
       const hasAllEnums = EXPECTED_ENUM_VALUES.every(val => sql.includes(`'${val}'`));
@@ -76,7 +88,7 @@ async function main() {
     if (logSchema) {
       console.log('\n📋 Log Table:');
       const sql = logSchema.sql;
-      console.log(sql.substring(0, 200) + '...\n');
+      console.log(sql.substring(0, SCHEMA_PREVIEW_LENGTH) + '...\n');
       
       const hasAllEnums = EXPECTED_ENUM_VALUES.every(val => sql.includes(`'${val}'`));
       if (!hasAllEnums) {
