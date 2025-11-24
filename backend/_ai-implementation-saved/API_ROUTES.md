@@ -24,14 +24,113 @@ Authorization: Bearer YOUR_JWT_TOKEN
 
 ## Public Endpoints
 
-### 1. List Published Log Entries
+### 1. List All Published Posts (Combined Feed)
+
+**Endpoint:** `GET /api/library`
+
+**Description:** Returns all published Log and Grimoire entries combined, sorted by creation date.
+
+**Query Parameters:**
+- `page` (number, default: 1) - Page number for pagination
+- `pageSize` (number, default: 25, max: 100) - Items per page
+- `sort` (string, default: 'createdAt:desc') - Sort order
+- `filters` (object) - Filter criteria
+
+**Example Request:**
+```bash
+curl 'http://localhost:1337/api/library?page=1&pageSize=10&sort=createdAt:desc'
+```
+
+**Example Response:**
+```json
+{
+  "data": [
+    {
+      "id": 1,
+      "type": "log",
+      "attributes": {
+        "title": "Welcome to the Alchemy Library",
+        "slug": "welcome-to-the-alchemy-library",
+        "postType": "log",
+        "status": "published",
+        "publishedBody": "<p>Content here...</p>",
+        "excerpt": "An introduction to our library",
+        "author": "The Alchemy Team",
+        "createdAt": "2025-11-23T10:00:00.000Z",
+        "updatedAt": "2025-11-23T10:30:00.000Z",
+        "tags": {
+          "data": [
+            {
+              "id": 1,
+              "attributes": {
+                "name": "announcement",
+                "slug": "announcement"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": 1,
+      "type": "grimoire",
+      "attributes": {
+        "title": "Getting Started Guide",
+        "slug": "getting-started-guide",
+        "postType": "grimoire",
+        "status": "published",
+        "publishedBody": "<p>Detailed guide content...</p>",
+        "excerpt": "Complete guide to getting started",
+        "author": "The Alchemy Team",
+        "category": "Guides",
+        "heroImage": {
+          "data": {
+            "id": 1,
+            "attributes": {
+              "url": "/uploads/hero_image.jpg",
+              "formats": {
+                "thumbnail": { "url": "/uploads/thumbnail_hero_image.jpg" }
+              }
+            }
+          }
+        },
+        "tags": {
+          "data": [
+            {
+              "id": 2,
+              "attributes": {
+                "name": "tutorial",
+                "slug": "tutorial"
+              }
+            }
+          ]
+        },
+        "createdAt": "2025-11-22T15:00:00.000Z",
+        "updatedAt": "2025-11-22T16:00:00.000Z"
+      }
+    }
+  ],
+  "meta": {
+    "pagination": {
+      "page": 1,
+      "pageSize": 10,
+      "pageCount": 5,
+      "total": 47
+    }
+  }
+}
+```
+
+---
+
+### 2. List Published Log Entries
 
 **Endpoint:** `GET /api/logs`
 
-**Description:** Returns published Log entries.
+**Description:** Returns only published Log entries.
 
 **Query Parameters:**
-- `status=published` - Filter for published content (Strapi's built-in draft/publish)
+- `filters[status][$eq]=published` - Filter for published only
 - `populate=tags` - Include related tags
 - `sort=createdAt:desc` - Sort order
 - `pagination[page]` - Page number
@@ -39,7 +138,7 @@ Authorization: Bearer YOUR_JWT_TOKEN
 
 **Example Request:**
 ```bash
-curl 'http://localhost:1337/api/logs?status=published&populate=tags&sort=createdAt:desc&pagination[page]=1&pagination[pageSize]=10'
+curl 'http://localhost:1337/api/logs?filters[status][$eq]=published&populate=tags&sort=createdAt:desc&pagination[page]=1&pagination[pageSize]=10'
 ```
 
 **Example Response:**
@@ -51,12 +150,13 @@ curl 'http://localhost:1337/api/logs?status=published&populate=tags&sort=created
       "attributes": {
         "title": "Welcome to the Alchemy Library",
         "slug": "welcome-to-the-alchemy-library",
-        "body": "<p>Content here...</p>",
+        "postType": "log",
+        "status": "published",
+        "publishedBody": "<p>Content here...</p>",
         "excerpt": "An introduction to our library",
         "author": "The Alchemy Team",
         "createdAt": "2025-11-23T10:00:00.000Z",
         "updatedAt": "2025-11-23T10:30:00.000Z",
-        "publishedAt": "2025-11-23T10:30:00.000Z",
         "tags": {
           "data": [
             {
@@ -84,17 +184,17 @@ curl 'http://localhost:1337/api/logs?status=published&populate=tags&sort=created
 
 ---
 
-### 2. List Published Grimoire Entries
+### 3. List Published Grimoire Entries
 
 **Endpoint:** `GET /api/grimoires`
 
-**Description:** Returns published Grimoire entries.
+**Description:** Returns only published Grimoire entries.
 
 **Query Parameters:** Same as Log endpoints
 
 **Example Request:**
 ```bash
-curl 'http://localhost:1337/api/grimoires?status=published&populate[tags]=*&populate[heroImage]=*&sort=createdAt:desc&pagination[page]=1&pagination[pageSize]=10'
+curl 'http://localhost:1337/api/grimoires?filters[status][$eq]=published&populate[tags]=*&populate[heroImage]=*&sort=createdAt:desc&pagination[page]=1&pagination[pageSize]=10'
 ```
 
 **Example Response:**
@@ -106,7 +206,9 @@ curl 'http://localhost:1337/api/grimoires?status=published&populate[tags]=*&popu
       "attributes": {
         "title": "Getting Started Guide",
         "slug": "getting-started-guide",
-        "body": "<p>Detailed guide content...</p>",
+        "postType": "grimoire",
+        "status": "published",
+        "publishedBody": "<p>Detailed guide content...</p>",
         "excerpt": "Complete guide to getting started",
         "author": "The Alchemy Team",
         "category": "Guides",
@@ -137,8 +239,7 @@ curl 'http://localhost:1337/api/grimoires?status=published&populate[tags]=*&popu
           ]
         },
         "createdAt": "2025-11-22T15:00:00.000Z",
-        "updatedAt": "2025-11-22T16:00:00.000Z",
-        "publishedAt": "2025-11-22T16:00:00.000Z"
+        "updatedAt": "2025-11-22T16:00:00.000Z"
       }
     }
   ],
@@ -155,7 +256,7 @@ curl 'http://localhost:1337/api/grimoires?status=published&populate[tags]=*&popu
 
 ---
 
-### 3. Get Single Log by Slug
+### 4. Get Single Log by Slug
 
 **Endpoint:** `GET /api/logs`
 
@@ -163,12 +264,12 @@ curl 'http://localhost:1337/api/grimoires?status=published&populate[tags]=*&popu
 
 **Query Parameters:**
 - `filters[slug][$eq]=your-slug-here` - Filter by slug
-- `status=published` - Only published
+- `filters[status][$eq]=published` - Only published
 - `populate=tags` - Include tags
 
 **Example Request:**
 ```bash
-curl 'http://localhost:1337/api/logs?filters[slug][$eq]=welcome-to-the-alchemy-library&status=published&populate=tags'
+curl 'http://localhost:1337/api/logs?filters[slug][$eq]=welcome-to-the-alchemy-library&filters[status][$eq]=published&populate=tags'
 ```
 
 **Example Response:**
@@ -180,12 +281,13 @@ curl 'http://localhost:1337/api/logs?filters[slug][$eq]=welcome-to-the-alchemy-l
       "attributes": {
         "title": "Welcome to the Alchemy Library",
         "slug": "welcome-to-the-alchemy-library",
-        "body": "<p>Full content here...</p>",
+        "postType": "log",
+        "status": "published",
+        "publishedBody": "<p>Full content here...</p>",
         "excerpt": "An introduction to our library",
         "author": "The Alchemy Team",
         "createdAt": "2025-11-23T10:00:00.000Z",
         "updatedAt": "2025-11-23T10:30:00.000Z",
-        "publishedAt": "2025-11-23T10:30:00.000Z",
         "tags": {
           "data": [
             {
@@ -213,7 +315,7 @@ curl 'http://localhost:1337/api/logs?filters[slug][$eq]=welcome-to-the-alchemy-l
 
 ---
 
-### 4. Get Single Grimoire by Slug
+### 5. Get Single Grimoire by Slug
 
 **Endpoint:** `GET /api/grimoires`
 
@@ -223,20 +325,20 @@ curl 'http://localhost:1337/api/logs?filters[slug][$eq]=welcome-to-the-alchemy-l
 
 **Example Request:**
 ```bash
-curl 'http://localhost:1337/api/grimoires?filters[slug][$eq]=getting-started-guide&status=published&populate[tags]=*&populate[heroImage]=*'
+curl 'http://localhost:1337/api/grimoires?filters[slug][$eq]=getting-started-guide&filters[status][$eq]=published&populate[tags]=*&populate[heroImage]=*'
 ```
 
 ---
 
-### 5. List All Tags
+### 6. List All Tags
 
 **Endpoint:** `GET /api/tags`
 
-**Description:** Returns all tags.
+**Description:** Returns all tags with their associated content counts.
 
 **Example Request:**
 ```bash
-curl 'http://localhost:1337/api/tags'
+curl 'http://localhost:1337/api/tags?populate[logs][count]=true&populate[grimoires][count]=true'
 ```
 
 **Example Response:**
@@ -277,11 +379,48 @@ curl 'http://localhost:1337/api/tags'
 
 ## Admin/Protected Endpoints
 
-### 6. Create Content
+### 7. Approve Draft
 
-**Endpoint:** `POST /api/logs` or `POST /api/grimoires`
+**Endpoint:** `PUT /api/logs/:id/approve` or `PUT /api/grimoires/:id/approve`
 
-**Description:** Create a new entry (saved as draft by default).
+**Description:** Approve a draft, copy `draftBody` to `publishedBody`, and set status to `published`.
+
+**Headers:**
+```
+Authorization: Bearer YOUR_JWT_TOKEN
+Content-Type: application/json
+```
+
+**Example Request:**
+```bash
+curl -X PUT 'http://localhost:1337/api/logs/1/approve' \
+  -H 'Authorization: Bearer YOUR_JWT_TOKEN' \
+  -H 'Content-Type: application/json'
+```
+
+**Example Response:**
+```json
+{
+  "data": {
+    "id": 1,
+    "attributes": {
+      "title": "Welcome to the Alchemy Library",
+      "slug": "welcome-to-the-alchemy-library",
+      "status": "published",
+      "publishedBody": "<p>Approved content...</p>",
+      "updatedAt": "2025-11-23T11:00:00.000Z"
+    }
+  }
+}
+```
+
+---
+
+### 8. Reject Draft
+
+**Endpoint:** `PUT /api/logs/:id/reject` or `PUT /api/grimoires/:id/reject`
+
+**Description:** Reject a draft and set status to `needs_changes`.
 
 **Headers:**
 ```
@@ -293,21 +432,85 @@ Content-Type: application/json
 ```json
 {
   "data": {
-    "title": "My New Post",
-    "body": "<p>Content here...</p>",
-    "excerpt": "A brief description",
-    "author": "Your Name"
+    "feedback": "Please add more details about the implementation"
+  }
+}
+```
+
+**Example Request:**
+```bash
+curl -X PUT 'http://localhost:1337/api/logs/1/reject' \
+  -H 'Authorization: Bearer YOUR_JWT_TOKEN' \
+  -H 'Content-Type: application/json' \
+  -d '{"data":{"feedback":"Please add more details"}}'
+```
+
+**Example Response:**
+```json
+{
+  "data": {
+    "id": 1,
+    "attributes": {
+      "title": "Welcome to the Alchemy Library",
+      "status": "needs_changes",
+      "updatedAt": "2025-11-23T11:05:00.000Z"
+    }
   }
 }
 ```
 
 ---
 
-### 7. Update Content
+### 9. Trigger AI Rewrite
+
+**Endpoint:** `POST /api/logs/:id/regenerate` or `POST /api/grimoires/:id/regenerate`
+
+**Description:** Trigger AI to regenerate the draft body.
+
+**Headers:**
+```
+Authorization: Bearer YOUR_JWT_TOKEN
+Content-Type: application/json
+```
+
+**Request Body (optional):**
+```json
+{
+  "data": {
+    "instructions": "Make it more technical and add code examples"
+  }
+}
+```
+
+**Example Request:**
+```bash
+curl -X POST 'http://localhost:1337/api/logs/1/regenerate' \
+  -H 'Authorization: Bearer YOUR_JWT_TOKEN' \
+  -H 'Content-Type: application/json' \
+  -d '{"data":{"instructions":"Make it more technical"}}'
+```
+
+**Example Response:**
+```json
+{
+  "data": {
+    "id": 1,
+    "attributes": {
+      "status": "pending_ai",
+      "updatedAt": "2025-11-23T11:10:00.000Z"
+    }
+  },
+  "message": "AI regeneration queued"
+}
+```
+
+---
+
+### 10. Publish Article
 
 **Endpoint:** `PUT /api/logs/:id` or `PUT /api/grimoires/:id`
 
-**Description:** Update an existing entry.
+**Description:** Manually publish an article by updating its status.
 
 **Headers:**
 ```
@@ -319,54 +522,28 @@ Content-Type: application/json
 ```json
 {
   "data": {
-    "title": "Updated Title",
-    "body": "<p>Updated content...</p>"
+    "status": "published",
+    "publishedBody": "<p>Final published content...</p>"
   }
 }
 ```
 
----
-
-### 8. Publish Content
-
-**Endpoint:** `POST /api/logs/:id/publish` or `POST /api/grimoires/:id/publish`
-
-**Description:** Publish a draft entry (Strapi built-in action).
-
-**Headers:**
-```
-Authorization: Bearer YOUR_JWT_TOKEN
-```
-
----
-
-### 9. Unpublish Content
-
-**Endpoint:** `POST /api/logs/:id/unpublish` or `POST /api/grimoires/:id/unpublish`
-
-**Description:** Unpublish a published entry (Strapi built-in action).
-
-**Headers:**
-```
-Authorization: Bearer YOUR_JWT_TOKEN
-```
-
----
-
-### 10. Delete Content
-
-**Endpoint:** `DELETE /api/logs/:id` or `DELETE /api/grimoires/:id`
-
-**Description:** Delete an entry.
-
-**Headers:**
-```
-Authorization: Bearer YOUR_JWT_TOKEN
+**Example Request:**
+```bash
+curl -X PUT 'http://localhost:1337/api/logs/1' \
+  -H 'Authorization: Bearer YOUR_JWT_TOKEN' \
+  -H 'Content-Type: application/json' \
+  -d '{"data":{"status":"published","publishedBody":"<p>Content...</p>"}}'
 ```
 
 ---
 
 ## Filtering and Sorting
+
+### Filter by Status
+```
+GET /api/logs?filters[status][$eq]=published
+```
 
 ### Filter by Tag
 ```
@@ -424,6 +601,11 @@ GET /api/logs?populate=*
 ### Populate specific relations
 ```
 GET /api/grimoires?populate[tags]=*&populate[heroImage]=*
+```
+
+### Deep populate
+```
+GET /api/grimoires?populate[tags][populate][logs][count]=true
 ```
 
 ---
@@ -489,8 +671,9 @@ Configure in `config/middlewares.ts` if needed.
 
 ## Next Steps
 
-- ✅ Check [Admin Workflow Guide](./ADMIN_WORKFLOW.md) for content management
-- ✅ See [Deployment Guide](../DEPLOYMENT.md) for production
+- ✅ Review [AI Workflow Guide](./AI_WORKFLOW.md) for automation
+- ✅ Check [Frontend Integration](./FRONTEND_INTEGRATION.md) for React setup
+- ✅ See [Deployment Guide](./DEPLOYMENT.md) for production
 
 ---
 
@@ -499,4 +682,3 @@ Configure in `config/middlewares.ts` if needed.
 - [Strapi REST API Documentation](https://docs.strapi.io/dev-docs/api/rest)
 - [Filtering Documentation](https://docs.strapi.io/dev-docs/api/rest/filters-locale-publication)
 - [Population Documentation](https://docs.strapi.io/dev-docs/api/rest/populate-select)
-- [Draft & Publish](https://docs.strapi.io/user-docs/content-manager/saving-and-publishing-content)

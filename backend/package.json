@@ -10,15 +10,12 @@
     "strapi": "strapi",
     "deploy": "strapi deploy",
     "clear-cache": "rm -rf .cache build dist && npm run build",
-    "reset-db": "rm -f .tmp/data.db && echo 'Database reset! Run npm run develop to recreate.'",
-    "diagnose-db": "node scripts/fix-enum-constraints.js"
+    "reset-db": "rm -f .tmp/data.db && echo 'Database reset! Run npm run develop to recreate.'"
   },
   "dependencies": {
     "@strapi/plugin-users-permissions": "5.8.0",
     "@strapi/strapi": "5.8.0",
     "better-sqlite3": "11.8.1",
-    "nodemailer": "^6.9.16",
-    "openai": "^4.77.3",
     "pg": "^8.13.1",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
@@ -27,7 +24,6 @@
   },
   "devDependencies": {
     "@types/node": "^20.17.10",
-    "@types/nodemailer": "^6.4.17",
     "typescript": "^5.7.3"
   },
   "engines": {

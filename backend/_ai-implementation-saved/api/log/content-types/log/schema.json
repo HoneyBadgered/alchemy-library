@@ -8,7 +8,7 @@
     "description": "Short-form posts, updates, and announcements"
   },
   "options": {
-    "draftAndPublish": true
+    "draftAndPublish": false
   },
   "pluginOptions": {},
   "attributes": {
@@ -23,7 +23,21 @@
       "targetField": "title",
       "required": true
     },
-    "body": {
+    "postType": {
+      "type": "string",
+      "default": "log",
+      "private": false
+    },
+    "status": {
+      "type": "enumeration",
+      "enum": ["draft", "pending_ai", "draft_ready", "needs_changes", "published"],
+      "default": "draft",
+      "required": true
+    },
+    "draftBody": {
+      "type": "richtext"
+    },
+    "publishedBody": {
       "type": "richtext"
     },
     "excerpt": {
