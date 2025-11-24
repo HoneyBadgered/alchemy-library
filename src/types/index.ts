@@ -122,6 +122,7 @@ export interface NormalizedPost {
   type: 'log' | 'grimoire';
   title: string;
   slug: string;
+  status: 'draft' | 'pending_ai' | 'draft_ready' | 'needs_changes' | 'published';
   excerpt?: string;
   content: string;
   author?: string;

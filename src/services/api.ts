@@ -69,6 +69,7 @@ class StrapiAPI {
       type: attributes.postType,
       title: attributes.title,
       slug: attributes.slug,
+      status: attributes.status,
       excerpt: attributes.excerpt,
       content,
       author: attributes.author,
