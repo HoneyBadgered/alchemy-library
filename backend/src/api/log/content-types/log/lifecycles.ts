@@ -45,6 +45,44 @@ export default {
     }
   },
 
+  async beforeUpdate(event) {
+    const { params } = event;
+    
+    // Check if status is being changed to 'published'
+    if (params.data.status === 'published') {
+      // Only proceed if publishedBody is not already being set
+      if (!params.data.publishedBody) {
+        try {
+          // First check if draftBody is in the current update data
+          let draftBody = params.data.draftBody;
+          
+          // If not in update data, fetch from database
+          if (!draftBody) {
+            // Ensure we have an ID to work with
+            const id = params.where?.id;
+            if (!id) {
+              strapi.log.warn('Cannot auto-copy draftBody: missing entry ID');
+              return;
+            }
+            
+            // Fetch the current entry to get draftBody
+            const entry = await strapi.entityService.findOne('api::log.log', id);
+            draftBody = entry?.draftBody;
+          }
+          
+          // If draftBody exists, copy it to publishedBody
+          if (draftBody) {
+            params.data.publishedBody = draftBody;
+            strapi.log.info(`Auto-copying draftBody to publishedBody for Log #${params.where?.id || 'unknown'}`);
+          }
+        } catch (error) {
+          strapi.log.error('Error auto-copying draftBody to publishedBody:', error);
+          // Don't throw - allow the update to continue even if auto-copy fails
+        }
+      }
+    }
+  },
+
   async afterUpdate(event) {
     const { result } = event;
 
