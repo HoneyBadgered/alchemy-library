@@ -20,6 +20,9 @@ const path = require('path');
 const DB_PATH = path.join(__dirname, '..', '.tmp', 'data.db');
 const BACKUP_PATH = path.join(__dirname, '..', '.tmp', `data.backup.${Date.now()}.db`);
 
+// These values should match the enum definitions in:
+// - backend/src/api/grimoire/content-types/grimoire/schema.json
+// - backend/src/api/log/content-types/log/schema.json
 const EXPECTED_ENUM_VALUES = ['draft', 'pending_ai', 'draft_ready', 'needs_changes', 'published'];
 const SCHEMA_PREVIEW_LENGTH = 200; // Characters to show when displaying schema
 
@@ -70,7 +73,10 @@ async function main() {
     if (grimoireSchema) {
       console.log('📋 Grimoire Table:');
       const sql = grimoireSchema.sql;
-      console.log(sql.substring(0, SCHEMA_PREVIEW_LENGTH) + '...\n');
+      const preview = sql.length > SCHEMA_PREVIEW_LENGTH 
+        ? sql.substring(0, SCHEMA_PREVIEW_LENGTH) + '...' 
+        : sql;
+      console.log(preview + '\n');
       
       // Check if all enum values are in the schema
       const hasAllEnums = EXPECTED_ENUM_VALUES.every(val => sql.includes(`'${val}'`));
@@ -88,7 +94,10 @@ async function main() {
     if (logSchema) {
       console.log('\n📋 Log Table:');
       const sql = logSchema.sql;
-      console.log(sql.substring(0, SCHEMA_PREVIEW_LENGTH) + '...\n');
+      const preview = sql.length > SCHEMA_PREVIEW_LENGTH 
+        ? sql.substring(0, SCHEMA_PREVIEW_LENGTH) + '...' 
+        : sql;
+      console.log(preview + '\n');
       
       const hasAllEnums = EXPECTED_ENUM_VALUES.every(val => sql.includes(`'${val}'`));
       if (!hasAllEnums) {
