@@ -1,5 +1,5 @@
 .navigation {
-  background: linear-gradient(135deg, #000106 0%, #0c0910 100%);
+  background: linear-gradient(.5deg, #14513A 0%, #0c0910 100%);
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   position: sticky;
   top: 0;
@@ -12,7 +12,7 @@
   padding: 1rem 2rem;
   display: flex;
   justify-content: space-between;
-  align-items: center;
+  /* align-items: center; */
   gap: 2rem;
 }
 
@@ -50,16 +50,16 @@
 }
 
 .nav-link {
-  color: white;
+  color: #E3DFE6;
   text-decoration: none;
   font-weight: 500;
-  padding: 0.5rem 1rem;
+  /* padding: 0.5rem 1rem; */
   border-radius: 4px;
   transition: background-color 0.2s;
 }
 
 .nav-link:hover {
-  background-color: rgba(255, 255, 255, 0.1);
+  background-color: #070709;
 }
 
 @media (max-width: 768px) {

@@ -9,7 +9,11 @@ export default function Navigation() {
           <Link to="/" className="nav-link">Home</Link>
         </div>
         <Link to="/" className="nav-logo">
-          The Alchemy Library
+           <img 
+              src="/assets/images/marketing/logo.png" 
+              alt="The Alchemy Table Logo" 
+              style={{ height: '60px' }} 
+      />
         </Link>
         <div className="nav-links nav-links-right">
           <Link to="/log" className="nav-link">Log</Link>
