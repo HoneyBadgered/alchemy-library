@@ -5,7 +5,6 @@ import type {
   StrapiGrimoire,
   NormalizedPost,
   StrapiError,
-  LogAttributes,
   GrimoireAttributes,
 } from '../types';
 
@@ -61,15 +60,13 @@ class StrapiAPI {
     }
   }
 
-  // Type guard to check if attributes are for a grimoire
-  private isGrimoireAttributes(attributes: LogAttributes | GrimoireAttributes): attributes is GrimoireAttributes {
-    return 'heroImage' in attributes || 'category' in attributes;
-  }
-
   // Normalize post data for easier consumption
   private normalizePost(post: StrapiLog | StrapiGrimoire, type: 'log' | 'grimoire'): NormalizedPost {
     const { id, attributes } = post;
     const content = attributes.body || '';
+    
+    // Cast to grimoire attributes only when type is grimoire
+    const grimoireAttrs = type === 'grimoire' ? attributes as GrimoireAttributes : null;
     
     return {
       id,
@@ -79,13 +76,13 @@ class StrapiAPI {
       excerpt: attributes.excerpt,
       content,
       author: attributes.author,
-      category: this.isGrimoireAttributes(attributes) ? attributes.category : undefined,
+      category: grimoireAttrs?.category,
       createdAt: attributes.createdAt,
       updatedAt: attributes.updatedAt,
       publishedAt: attributes.publishedAt,
       heroImage:
-        this.isGrimoireAttributes(attributes) && attributes.heroImage?.data
-          ? `${config.strapi.url}${attributes.heroImage.data.attributes.url}`
+        grimoireAttrs?.heroImage?.data
+          ? `${config.strapi.url}${grimoireAttrs.heroImage.data.attributes.url}`
           : undefined,
       tags:
         attributes.tags?.data.map((tag) => ({
