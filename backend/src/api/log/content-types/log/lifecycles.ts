@@ -45,6 +45,22 @@ export default {
     }
   },
 
+  async beforeUpdate(event) {
+    const { params } = event;
+    
+    // Check if status is being changed to 'published'
+    if (params.data.status === 'published') {
+      // Fetch the current entry to get draftBody
+      const entry = await strapi.entityService.findOne('api::log.log', params.where.id);
+      
+      // If draftBody exists and publishedBody is empty, copy draftBody to publishedBody
+      if (entry && entry.draftBody && !params.data.publishedBody) {
+        params.data.publishedBody = entry.draftBody;
+        strapi.log.info(`Auto-copying draftBody to publishedBody for Log #${params.where.id}`);
+      }
+    }
+  },
+
   async afterUpdate(event) {
     const { result } = event;
 
