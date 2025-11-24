@@ -1,8 +1,13 @@
 import OpenAI from 'openai';
 
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
-});
+// Initialize OpenAI client only if API key is provided
+let openai: OpenAI | null = null;
+
+if (process.env.OPENAI_API_KEY && process.env.OPENAI_API_KEY !== 'sk-your-openai-api-key') {
+  openai = new OpenAI({
+    apiKey: process.env.OPENAI_API_KEY,
+  });
+}
 
 const SYSTEM_PROMPT = `You are an expert content writer for The Alchemy Table Library, a knowledge repository that combines mystical theming with practical, educational content.
 
@@ -32,6 +37,11 @@ interface GenerateDraftParams {
 
 export async function generateDraft(params: GenerateDraftParams): Promise<string> {
   const { title, postType, additionalContext, category, instructions } = params;
+
+  // Check if OpenAI is configured
+  if (!openai) {
+    throw new Error('OpenAI API key is not configured. Please set OPENAI_API_KEY in your environment variables.');
+  }
 
   // Construct user prompt
   let userPrompt = `Generate a ${postType === 'log' ? 'short-form blog post (Log)' : 'comprehensive long-form article (Grimoire)'} with the following title: "${title}"`;
@@ -93,6 +103,11 @@ export async function regenerateDraft(
   params: GenerateDraftParams & { currentDraft?: string }
 ): Promise<string> {
   const { currentDraft, ...restParams } = params;
+
+  // Check if OpenAI is configured
+  if (!openai) {
+    throw new Error('OpenAI API key is not configured. Please set OPENAI_API_KEY in your environment variables.');
+  }
 
   if (currentDraft && restParams.instructions) {
     // If we have a current draft and specific instructions, modify it

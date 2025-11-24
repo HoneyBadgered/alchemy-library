@@ -1,15 +1,22 @@
 import nodemailer from 'nodemailer';
 
-// Create reusable transporter
-const transporter = nodemailer.createTransport({
-  host: process.env.SMTP_HOST,
-  port: parseInt(process.env.SMTP_PORT || '587', 10),
-  secure: process.env.SMTP_PORT === '465', // true for 465, false for other ports
-  auth: {
-    user: process.env.SMTP_USERNAME,
-    pass: process.env.SMTP_PASSWORD,
-  },
-});
+// Create reusable transporter only if email is configured
+let transporter: nodemailer.Transporter | null = null;
+
+if (process.env.SMTP_HOST && 
+    process.env.SMTP_USERNAME && 
+    process.env.SMTP_PASSWORD &&
+    process.env.SMTP_USERNAME !== 'your-email@gmail.com') {
+  transporter = nodemailer.createTransport({
+    host: process.env.SMTP_HOST,
+    port: parseInt(process.env.SMTP_PORT || '587', 10),
+    secure: process.env.SMTP_PORT === '465', // true for 465, false for other ports
+    auth: {
+      user: process.env.SMTP_USERNAME,
+      pass: process.env.SMTP_PASSWORD,
+    },
+  });
+}
 
 interface DraftNotificationParams {
   id: number;
@@ -199,6 +206,12 @@ This is an automated notification from your Strapi CMS.
 `;
 
   try {
+    // Skip sending email if transporter is not configured
+    if (!transporter) {
+      console.log(`Email not configured - skipping notification for ${postType} #${id}`);
+      return;
+    }
+
     await transporter.sendMail({
       from: process.env.EMAIL_FROM || '"Alchemy Library" <noreply@alchemy-library.com>',
       to: adminEmail,
@@ -251,6 +264,12 @@ export async function sendRejectionNotification(params: {
 `;
 
   try {
+    // Skip sending email if transporter is not configured
+    if (!transporter) {
+      console.log(`Email not configured - skipping rejection notification for ${postType} #${id}`);
+      return;
+    }
+
     await transporter.sendMail({
       from: process.env.EMAIL_FROM || '"Alchemy Library" <noreply@alchemy-library.com>',
       to: adminEmail,
