@@ -13,6 +13,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+  gap: 2rem;
 }
 
 .nav-logo {
@@ -24,6 +25,8 @@
   align-items: center;
   gap: 0.5rem;
   transition: opacity 0.2s;
+  order: 2;
+  flex: 0 0 auto;
 }
 
 .nav-logo:hover {
@@ -33,6 +36,17 @@
 .nav-links {
   display: flex;
   gap: 2rem;
+  flex: 1;
+}
+
+.nav-links-left {
+  order: 1;
+  justify-content: flex-start;
+}
+
+.nav-links-right {
+  order: 3;
+  justify-content: flex-end;
 }
 
 .nav-link {
@@ -56,5 +70,15 @@
   
   .nav-links {
     gap: 1rem;
+  }
+
+  .nav-links-left,
+  .nav-links-right {
+    order: 3;
+    justify-content: center;
+  }
+
+  .nav-logo {
+    order: 1;
   }
 }
