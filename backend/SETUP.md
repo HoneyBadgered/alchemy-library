@@ -535,19 +535,7 @@ npm run develop
 
 After Strapi restarts, create a new admin user. All 5 status options will now appear.
 
-**Solution (Production):** For production databases with existing data, you need to manually update the database constraints:
-
-For SQLite:
-```sql
--- This requires recreating the table with the new enum constraint
--- Backup your data first!
-```
-
-For PostgreSQL:
-```sql
--- Add the missing enum values to the constraint
--- Contact your database administrator
-```
+**Solution (Production):** For production databases with existing data, consult the Strapi documentation on [database migrations](https://docs.strapi.io/) or contact your database administrator. Enum constraints must be updated at the database level.
 
 **Alternative:** Use the interactive script:
 ```bash

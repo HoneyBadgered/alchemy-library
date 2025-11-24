@@ -27,8 +27,8 @@ echo "Cache cleared successfully!"
 echo ""
 
 # Ask user if they want to reset the database (DEVELOPMENT ONLY)
-echo "⚠️  For enum changes (like status field), you may also need to reset the database."
-echo "   This will DELETE ALL DATA in your development database!"
+echo "WARNING: For enum changes (like status field), you may also need to reset the database."
+echo "         This will DELETE ALL DATA in your development database!"
 read -p "Reset development database? (y/N): " -n 1 -r
 echo ""
 if [[ $REPLY =~ ^[Yy]$ ]]; then
