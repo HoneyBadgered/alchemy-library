@@ -7,5 +7,5 @@
     "skipLibCheck": true
   },
   "include": ["./", "./**/*.ts", "./**/*.js", "./**/*.json"],
-  "exclude": ["node_modules", "build", ".cache", "dist", ".tmp"]
+  "exclude": ["node_modules", "build", ".cache", "dist", ".tmp", "_ai-implementation-saved"]
 }

@@ -11,7 +11,8 @@ This guide provides complete instructions for setting up, configuring, and deplo
 3. [CORS Configuration](#cors-configuration)
 4. [Collection Types](#collection-types)
 5. [API Configuration](#api-configuration)
-6. [Deployment](#deployment)
+6. [AI Workflow](#ai-workflow)
+7. [Deployment](#deployment)
 
 ---
 
@@ -63,6 +64,22 @@ DATABASE_FILENAME=.tmp/data.db
 
 # Frontend URL (for CORS)
 FRONTEND_URL=http://localhost:5173
+
+# Email Configuration (for AI workflow notifications)
+SMTP_HOST=smtp.your-email-provider.com
+SMTP_PORT=587
+SMTP_USERNAME=your-email@example.com
+SMTP_PASSWORD=your-email-password
+EMAIL_FROM=noreply@alchemy-library.com
+ADMIN_EMAIL=admin@alchemy-library.com
+
+# OpenAI Configuration (for AI draft generation)
+OPENAI_API_KEY=sk-your-openai-api-key
+OPENAI_MODEL=gpt-4-turbo-preview
+
+# Base URLs
+BASE_URL=http://localhost:1337
+FRONTEND_BASE_URL=http://localhost:5173
 ```
 
 5. **Generate secret keys:**
@@ -81,6 +98,21 @@ npm run develop
 7. **Access the admin panel:**
 
 Open your browser to `http://localhost:1337/admin` and create your first admin user.
+
+8. **If status dropdown is missing options (only shows 3 instead of 5 statuses):**
+
+This issue occurs when the database schema doesn't match the current schema definitions. You need to reset the database in development:
+
+```bash
+# DEVELOPMENT ONLY - This deletes all data!
+npm run reset-db
+npm run clear-cache
+npm run develop
+```
+
+After restarting Strapi, you'll need to create a new admin user. The status dropdown will now show all 5 values: `draft`, `pending_ai`, `draft_ready`, `needs_changes`, `published`.
+
+**Note:** In production, you would need to run a database migration instead of resetting the database.
 
 ---
 
@@ -252,7 +284,7 @@ The schema files are located in `src/api/[collection-name]/content-types/[collec
     "description": "Short-form posts, updates, and announcements"
   },
   "options": {
-    "draftAndPublish": true
+    "draftAndPublish": false
   },
   "pluginOptions": {},
   "attributes": {
@@ -267,7 +299,21 @@ The schema files are located in `src/api/[collection-name]/content-types/[collec
       "targetField": "title",
       "required": true
     },
-    "body": {
+    "postType": {
+      "type": "string",
+      "default": "log",
+      "private": false
+    },
+    "status": {
+      "type": "enumeration",
+      "enum": ["pending_ai", "draft_ready", "needs_changes", "published"],
+      "default": "pending_ai",
+      "required": true
+    },
+    "draftBody": {
+      "type": "richtext"
+    },
+    "publishedBody": {
       "type": "richtext"
     },
     "excerpt": {
@@ -302,7 +348,7 @@ The schema files are located in `src/api/[collection-name]/content-types/[collec
     "description": "Long-form articles, guides, and educational content"
   },
   "options": {
-    "draftAndPublish": true
+    "draftAndPublish": false
   },
   "pluginOptions": {},
   "attributes": {
@@ -317,7 +363,21 @@ The schema files are located in `src/api/[collection-name]/content-types/[collec
       "targetField": "title",
       "required": true
     },
-    "body": {
+    "postType": {
+      "type": "string",
+      "default": "grimoire",
+      "private": false
+    },
+    "status": {
+      "type": "enumeration",
+      "enum": ["pending_ai", "draft_ready", "needs_changes", "published"],
+      "default": "pending_ai",
+      "required": true
+    },
+    "draftBody": {
+      "type": "richtext"
+    },
+    "publishedBody": {
       "type": "richtext"
     },
     "excerpt": {
@@ -419,6 +479,7 @@ The schema files are located in `src/api/[collection-name]/content-types/[collec
 
 2. **Configure all collection permissions:**
    - ✅ All CRUD operations (create, find, findOne, update, delete)
+   - ✅ Custom routes (approve, reject, etc.)
 
 ---
 
@@ -427,8 +488,9 @@ The schema files are located in `src/api/[collection-name]/content-types/[collec
 After completing this setup:
 
 1. ✅ Read the [API Routes Documentation](./API_ROUTES.md) for endpoint details
-2. ✅ Check the [Admin Workflow Guide](./ADMIN_WORKFLOW.md) for content management
-3. ✅ See the [Deployment Guide](../DEPLOYMENT.md) for production deployment
+2. ✅ Review the [AI Workflow Guide](./AI_WORKFLOW.md) for automation setup
+3. ✅ Check the [Frontend Integration Guide](./FRONTEND_INTEGRATION.md) for React setup
+4. ✅ See the [Deployment Guide](./DEPLOYMENT.md) for production deployment
 
 ---
 
@@ -455,6 +517,31 @@ npm run develop
 ### Permission errors
 - Check Settings → Users & Permissions → Roles
 - Ensure Public role has `find` and `findOne` enabled for published content
+
+### Admin panel not showing all status options
+
+If the admin panel dropdown is only showing "draft", "draft_ready", and "pending_ai" instead of all 5 status values ("draft", "pending_ai", "draft_ready", "needs_changes", "published"):
+
+**Root Cause:** This happens when the database schema was created with an older version of the schema that had fewer enum values. Strapi doesn't automatically update database constraints when you change enum values in schema.json.
+
+**Solution (Development):** Reset the database and clear cache:
+
+```bash
+# DEVELOPMENT ONLY - Deletes all data!
+npm run reset-db
+npm run clear-cache
+npm run develop
+```
+
+After Strapi restarts, create a new admin user. All 5 status options will now appear.
+
+**Solution (Production):** For production databases with existing data, consult the Strapi documentation on [database migrations](https://docs.strapi.io/) or contact your database administrator. Enum constraints must be updated at the database level.
+
+**Alternative:** Use the interactive script:
+```bash
+chmod +x clear-cache.sh  # Only needed once
+./clear-cache.sh  # Will prompt you to reset database
+```
 
 ---
 

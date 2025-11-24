@@ -5,6 +5,7 @@ import type {
   StrapiGrimoire,
   NormalizedPost,
   StrapiError,
+  GrimoireAttributes,
 } from '../types';
 
 class StrapiAPIError extends Error {
@@ -60,25 +61,28 @@ class StrapiAPI {
   }
 
   // Normalize post data for easier consumption
-  private normalizePost(post: StrapiLog | StrapiGrimoire): NormalizedPost {
+  private normalizePost(post: StrapiLog | StrapiGrimoire, type: 'log' | 'grimoire'): NormalizedPost {
     const { id, attributes } = post;
-    const content = attributes.publishedBody || attributes.draftBody || '';
+    const content = attributes.body || '';
+    
+    // Cast to grimoire attributes only when type is grimoire
+    const grimoireAttrs = type === 'grimoire' ? attributes as GrimoireAttributes : null;
     
     return {
       id,
-      type: attributes.postType,
+      type,
       title: attributes.title,
       slug: attributes.slug,
-      status: attributes.status,
       excerpt: attributes.excerpt,
       content,
       author: attributes.author,
-      category: 'category' in attributes ? attributes.category : undefined,
+      category: grimoireAttrs?.category,
       createdAt: attributes.createdAt,
       updatedAt: attributes.updatedAt,
+      publishedAt: attributes.publishedAt,
       heroImage:
-        'heroImage' in attributes && attributes.heroImage?.data
-          ? `${config.strapi.url}${attributes.heroImage.data.attributes.url}`
+        grimoireAttrs?.heroImage?.data
+          ? `${config.strapi.url}${grimoireAttrs.heroImage.data.attributes.url}`
           : undefined,
       tags:
         attributes.tags?.data.map((tag) => ({
@@ -96,20 +100,20 @@ class StrapiAPI {
   }): Promise<{ data: NormalizedPost[]; pagination: { total: number } }> {
     const { page = 1, pageSize = 25 } = params || {};
 
-    // Fetch both logs and grimoires
+    // Fetch both logs and grimoires (using Strapi's built-in publicationState)
     const [logsResponse, grimoiresResponse] = await Promise.all([
       this.fetch<StrapiResponse<StrapiLog[]>>(
-        `/logs?filters[status][$eq]=published&populate=tags&sort=createdAt:desc&pagination[page]=${page}&pagination[pageSize]=${pageSize}`
+        `/logs?publicationState=live&populate=tags&sort=createdAt:desc&pagination[page]=${page}&pagination[pageSize]=${pageSize}`
       ),
       this.fetch<StrapiResponse<StrapiGrimoire[]>>(
-        `/grimoires?filters[status][$eq]=published&populate[tags]=*&populate[heroImage]=*&sort=createdAt:desc&pagination[page]=${page}&pagination[pageSize]=${pageSize}`
+        `/grimoires?publicationState=live&populate[tags]=*&populate[heroImage]=*&sort=createdAt:desc&pagination[page]=${page}&pagination[pageSize]=${pageSize}`
       ),
     ]);
 
     // Combine and sort by date
     const combined = [
-      ...logsResponse.data.map(this.normalizePost.bind(this)),
-      ...grimoiresResponse.data.map(this.normalizePost.bind(this)),
+      ...logsResponse.data.map(post => this.normalizePost(post, 'log')),
+      ...grimoiresResponse.data.map(post => this.normalizePost(post, 'grimoire')),
     ].sort(
       (a, b) =>
         new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
@@ -133,11 +137,11 @@ class StrapiAPI {
     const { page = 1, pageSize = 25 } = params || {};
 
     const response = await this.fetch<StrapiResponse<StrapiLog[]>>(
-      `/logs?filters[status][$eq]=published&populate=tags&sort=createdAt:desc&pagination[page]=${page}&pagination[pageSize]=${pageSize}`
+      `/logs?publicationState=live&populate=tags&sort=createdAt:desc&pagination[page]=${page}&pagination[pageSize]=${pageSize}`
     );
 
     return {
-      data: response.data.map(this.normalizePost.bind(this)),
+      data: response.data.map(post => this.normalizePost(post, 'log')),
       pagination: response.meta.pagination,
     };
   }
@@ -150,11 +154,11 @@ class StrapiAPI {
     const { page = 1, pageSize = 25 } = params || {};
 
     const response = await this.fetch<StrapiResponse<StrapiGrimoire[]>>(
-      `/grimoires?filters[status][$eq]=published&populate[tags]=*&populate[heroImage]=*&sort=createdAt:desc&pagination[page]=${page}&pagination[pageSize]=${pageSize}`
+      `/grimoires?publicationState=live&populate[tags]=*&populate[heroImage]=*&sort=createdAt:desc&pagination[page]=${page}&pagination[pageSize]=${pageSize}`
     );
 
     return {
-      data: response.data.map(this.normalizePost.bind(this)),
+      data: response.data.map(post => this.normalizePost(post, 'grimoire')),
       pagination: response.meta.pagination,
     };
   }
@@ -171,8 +175,8 @@ class StrapiAPI {
       // Search in specific collection
       const endpoint =
         type === 'log'
-          ? `/logs?filters[slug][$eq]=${encodedSlug}&filters[status][$eq]=published&populate=tags`
-          : `/grimoires?filters[slug][$eq]=${encodedSlug}&filters[status][$eq]=published&populate[tags]=*&populate[heroImage]=*`;
+          ? `/logs?filters[slug][$eq]=${encodedSlug}&publicationState=live&populate=tags`
+          : `/grimoires?filters[slug][$eq]=${encodedSlug}&publicationState=live&populate[tags]=*&populate[heroImage]=*`;
 
       const response = await this.fetch<
         StrapiResponse<(StrapiLog | StrapiGrimoire)[]>
@@ -182,17 +186,17 @@ class StrapiAPI {
         return null;
       }
 
-      return this.normalizePost(response.data[0]);
+      return this.normalizePost(response.data[0], type);
     }
 
     // Search both collections
     try {
       const logResponse = await this.fetch<StrapiResponse<StrapiLog[]>>(
-        `/logs?filters[slug][$eq]=${encodedSlug}&filters[status][$eq]=published&populate=tags`
+        `/logs?filters[slug][$eq]=${encodedSlug}&publicationState=live&populate=tags`
       );
 
       if (logResponse.data.length > 0) {
-        return this.normalizePost(logResponse.data[0]);
+        return this.normalizePost(logResponse.data[0], 'log');
       }
     } catch {
       // Continue to grimoire search
@@ -202,11 +206,11 @@ class StrapiAPI {
       const grimoireResponse = await this.fetch<
         StrapiResponse<StrapiGrimoire[]>
       >(
-        `/grimoires?filters[slug][$eq]=${encodedSlug}&filters[status][$eq]=published&populate[tags]=*&populate[heroImage]=*`
+        `/grimoires?filters[slug][$eq]=${encodedSlug}&publicationState=live&populate[tags]=*&populate[heroImage]=*`
       );
 
       if (grimoireResponse.data.length > 0) {
-        return this.normalizePost(grimoireResponse.data[0]);
+        return this.normalizePost(grimoireResponse.data[0], 'grimoire');
       }
     } catch {
       // Not found in either collection
