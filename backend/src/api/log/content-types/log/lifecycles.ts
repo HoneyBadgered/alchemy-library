@@ -52,13 +52,20 @@ export default {
     if (params.data.status === 'published') {
       // Only proceed if publishedBody is not already being set
       if (!params.data.publishedBody) {
+        // Ensure we have an ID to work with
+        const id = params.where?.id;
+        if (!id) {
+          strapi.log.warn('Cannot auto-copy draftBody: missing entry ID');
+          return;
+        }
+        
         // Fetch the current entry to get draftBody
-        const entry = await strapi.entityService.findOne('api::log.log', params.where.id);
+        const entry = await strapi.entityService.findOne('api::log.log', id);
         
         // If draftBody exists, copy it to publishedBody
         if (entry?.draftBody) {
           params.data.publishedBody = entry.draftBody;
-          strapi.log.info(`Auto-copying draftBody to publishedBody for Log #${params.where.id}`);
+          strapi.log.info(`Auto-copying draftBody to publishedBody for Log #${id}`);
         }
       }
     }
