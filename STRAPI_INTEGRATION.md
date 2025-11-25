@@ -261,10 +261,10 @@ VITE_STRAPI_API_URL=http://localhost:1337/api
 ### Fetching Published Posts
 
 ```javascript
-// GET /api/logs?filters[status][$eq]=published&populate[tags]=*
-// Uses Strapi v4 query syntax:
+// GET /api/logs?filters[status][$eq]=published&populate=tags
+// Uses Strapi v5 query syntax:
 // - filters[status][$eq]=published for filtering published content
-// - populate[tags]=* for including related tags
+// - populate=tags for including related tags
 
 {
   "data": [

@@ -162,21 +162,21 @@ export interface NormalizedPost {
 
 ## API Service Layer
 
-The API service uses Strapi v4's filter syntax to fetch only published content.
+The API service uses Strapi v5's query syntax to fetch only published content.
 
-**Query Parameter Conventions (Strapi v4):**
+**Query Parameter Conventions (Strapi v5):**
 
 - **Filtering**: Use `filters[field][$operator]=value` syntax
   - Example: `filters[status][$eq]=published`
-- **Population**: Use `populate[relation]=*` for relations
-  - Example: `populate[tags]=*`, `populate[heroImage]=*`
+- **Population**: Use `populate=relation1,relation2` for relations
+  - Example: `populate=tags`, `populate=tags,heroImage`
 - **Sorting**: Use `sort=field:direction`
   - Example: `sort=createdAt:desc`
 - **Pagination**: Use `pagination[page]=N` and `pagination[pageSize]=N`
 
 **Key endpoints:**
-- `/api/logs?filters[status][$eq]=published&populate[tags]=*` - Published logs with tags
-- `/api/grimoires?filters[status][$eq]=published&populate[tags]=*&populate[heroImage]=*` - Published grimoires with tags and hero images
+- `/api/logs?filters[status][$eq]=published&populate=tags` - Published logs with tags
+- `/api/grimoires?filters[status][$eq]=published&populate=tags,heroImage` - Published grimoires with tags and hero images
 
 See `src/services/api.ts` for the full implementation with detailed comments.
 
