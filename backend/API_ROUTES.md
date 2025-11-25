@@ -31,7 +31,7 @@ Authorization: Bearer YOUR_JWT_TOKEN
 **Description:** Returns published Log entries.
 
 **Query Parameters:**
-- `status=published` - Filter for published content (Strapi's built-in draft/publish)
+- `status=published` - Filter for published content only (Strapi 5's draft/publish system). Note: In Strapi v4 this was `publicationState=live`, but that parameter was removed in Strapi 5.
 - `populate=tags` - Include related tags
 - `sort=createdAt:desc` - Sort order
 - `pagination[page]` - Page number
@@ -163,7 +163,7 @@ curl 'http://localhost:1337/api/grimoires?status=published&populate[tags]=*&popu
 
 **Query Parameters:**
 - `filters[slug][$eq]=your-slug-here` - Filter by slug
-- `status=published` - Only published
+- `status=published` - Only published (Strapi 5 parameter; replaces `publicationState=live` from v4)
 - `populate=tags` - Include tags
 
 **Example Request:**
