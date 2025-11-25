@@ -162,15 +162,25 @@ export interface NormalizedPost {
 
 ## API Service Layer
 
-The API service uses Strapi 5's built-in draft/publish system via the `status=published` query parameter to fetch only published content.
+The API service uses Strapi v4's filter syntax to fetch only published content.
+
+**Query Parameter Conventions (Strapi v4):**
+
+- **Filtering**: Use `filters[field][$operator]=value` syntax
+  - Example: `filters[status][$eq]=published`
+- **Population**: Use `populate[relation]=*` for relations
+  - Example: `populate[tags]=*`, `populate[heroImage]=*`
+- **Sorting**: Use `sort=field:direction`
+  - Example: `sort=createdAt:desc`
+- **Pagination**: Use `pagination[page]=N` and `pagination[pageSize]=N`
 
 **Key endpoints:**
-- `/api/logs?status=published` - Published logs
-- `/api/grimoires?status=published` - Published grimoires
+- `/api/logs?filters[status][$eq]=published&populate[tags]=*` - Published logs with tags
+- `/api/grimoires?filters[status][$eq]=published&populate[tags]=*&populate[heroImage]=*` - Published grimoires with tags and hero images
 
-**Note:** In Strapi v4, the parameter was `publicationState=live`, but this was replaced with `status=published` in Strapi 5.
+**Note:** The `filters[status][$eq]=published` syntax follows Strapi v4 conventions. Some Strapi 5 installations may also support `status=published` as a shorthand.
 
-See `src/services/api.ts` for the full implementation.
+See `src/services/api.ts` for the full implementation with detailed comments.
 
 ---
 
