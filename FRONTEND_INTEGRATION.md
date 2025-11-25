@@ -4,6 +4,8 @@
 
 This guide shows how to integrate your React 19 + TypeScript + Vite frontend with the Strapi backend to display Log and Grimoire content from The Alchemy Table Library.
 
+All data is fetched asynchronously from the Strapi backend API. The frontend components use React's `useEffect` hook to fetch data and handle loading/error states gracefully.
+
 ## Table of Contents
 
 1. [Environment Setup](#environment-setup)
@@ -11,6 +13,7 @@ This guide shows how to integrate your React 19 + TypeScript + Vite frontend wit
 3. [API Service Layer](#api-service-layer)
 4. [Components](#components)
 5. [Routing](#routing)
+6. [Data Fetching Pattern](#data-fetching-pattern)
 
 ---
 
@@ -173,19 +176,27 @@ See `src/services/api.ts` for the full implementation.
 
 ## Components
 
-### Library List
+### Log Page (`src/pages/LogPage.tsx`)
+
+Displays published Log entries (short-form posts) fetched from the Strapi `/api/logs` endpoint.
+
+### Grimoire Page (`src/pages/GrimoirePage.tsx`)
+
+Displays published Grimoire entries (long-form articles) grouped by category, fetched from the Strapi `/api/grimoires` endpoint.
+
+### Blog Post Page (`src/pages/BlogPostPage.tsx`)
+
+Displays a single log post fetched by slug.
+
+### Article Page (`src/pages/ArticlePage.tsx`)
+
+Displays a single grimoire article fetched by slug.
+
+### Library List (`src/components/LibraryList.tsx`)
 
 Displays a combined feed of all published Log and Grimoire entries.
 
-### Log List
-
-Displays published Log entries (short-form posts).
-
-### Grimoire List
-
-Displays published Grimoire entries (long-form articles), optionally grouped by category.
-
-### Library Post
+### Library Post (`src/components/LibraryPost.tsx`)
 
 Displays a single post with full content.
 
@@ -196,11 +207,81 @@ Displays a single post with full content.
 ```typescript
 <Routes>
   <Route path="/" element={<HomePage />} />
+  
+  {/* Strapi-powered routes */}
   <Route path="/library" element={<LibraryList />} />
-  <Route path="/library/log" element={<LogList />} />
-  <Route path="/library/grimoire" element={<GrimoireList />} />
   <Route path="/library/:type/:slug" element={<LibraryPost />} />
+  
+  {/* Log and Grimoire routes (using Strapi API with slug-based URLs) */}
+  <Route path="/log" element={<LogPage />} />
+  <Route path="/log/:slug" element={<BlogPostPage />} />
+  <Route path="/grimoire" element={<GrimoirePage />} />
+  <Route path="/grimoire/:slug" element={<ArticlePage />} />
 </Routes>
+```
+
+---
+
+## Data Fetching Pattern
+
+All pages follow a consistent pattern for fetching data from the Strapi API:
+
+```typescript
+import { useState, useEffect } from 'react';
+import { strapiAPI, StrapiAPIError } from '../services/api';
+import type { NormalizedPost } from '../types';
+
+export default function ExamplePage() {
+  const [data, setData] = useState<NormalizedPost[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    loadData();
+  }, []);
+
+  async function loadData() {
+    try {
+      setLoading(true);
+      const response = await strapiAPI.getLogs(); // or getGrimoires(), getPostBySlug(), etc.
+      setData(response.data);
+      setError(null);
+    } catch (err) {
+      setError(
+        err instanceof StrapiAPIError
+          ? err.message
+          : 'Failed to load data'
+      );
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  // Handle loading state
+  if (loading) {
+    return <div className="loading">Loading...</div>;
+  }
+
+  // Handle error state
+  if (error) {
+    return (
+      <div className="error">
+        <h2>Error</h2>
+        <p>{error}</p>
+        <button onClick={() => loadData()}>Try Again</button>
+      </div>
+    );
+  }
+
+  // Render data
+  return (
+    <div>
+      {data.map((item) => (
+        <div key={item.id}>{item.title}</div>
+      ))}
+    </div>
+  );
+}
 ```
 
 ---
