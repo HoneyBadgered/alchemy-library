@@ -18,15 +18,15 @@ function App() {
           <Routes>
             <Route path="/" element={<HomePage />} />
             
-            {/* New Strapi-powered routes */}
+            {/* Strapi-powered routes */}
             <Route path="/library" element={<LibraryList />} />
             <Route path="/library/:type/:slug" element={<LibraryPost />} />
             
-            {/* Legacy static routes (can be removed once Strapi is fully integrated) */}
+            {/* Log and Grimoire routes (now using Strapi API with slug-based URLs) */}
             <Route path="/log" element={<LogPage />} />
-            <Route path="/log/:id" element={<BlogPostPage />} />
+            <Route path="/log/:slug" element={<BlogPostPage />} />
             <Route path="/grimoire" element={<GrimoirePage />} />
-            <Route path="/grimoire/:id" element={<ArticlePage />} />
+            <Route path="/grimoire/:slug" element={<ArticlePage />} />
           </Routes>
         </main>
       </div>
