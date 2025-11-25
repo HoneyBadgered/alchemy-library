@@ -5,23 +5,24 @@
 }
 
 :root {
-  /* Typography */
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 
-    'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 
-    'Helvetica Neue', sans-serif;
-  line-height: 1.6;
-  font-weight: 400;
-  
-  /* Brand Colors */
-  --green: #14513A;
-  --black: #070709;
-  --gold: #F3B84A;
-  --violet: #2E2342;
-  --moon: #E3DFE6;
+  /* Font Families */
+  --font-serif: 'Cormorant Garamond', serif;
+  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
 
-  /* Base UI Colors */
-  color: var(--moon);
-  background-color: var(--black);
+  /* Line Heights */
+  --line-height-base: 1.6;
+  --line-height-tight: 1.2;
+
+  /* Text Color */
+  --text-color: #070709;
+
+  /* Brand Colors */
+  --green: #14513A; /* Verdant Elixir Green */
+  --black: #070709; /* Nightstone */
+  --gold: #F3B84A; /* Sunflower Gold */
+  --violet: #2E2342; /* Deep Alchemist Violet */
+  --light: #E3DFE6; /* Soft Moonstone */
+  --moon: #E3DFE6; /* Alias for backward compatibility */
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -30,11 +31,14 @@
 }
 
 body {
+  font-family: var(--font-sans);
+  font-size: 1rem;
+  line-height: var(--line-height-base);
+  color: var(--text-color);
   margin: 0;
   min-width: 320px;
   min-height: 100vh;
-  background-color: var(--moon) ;
-  color: var(--black);
+  background-color: var(--light);
 }
 
 #root {
@@ -54,19 +58,76 @@ a:hover {
 
 /* Headings */
 h1, h2, h3, h4, h5, h6 {
-  line-height: 1.2;
+  font-family: var(--font-serif);
+  line-height: var(--line-height-tight);
   font-weight: 600;
-  color: var(--violet);
+  color: var(--text-color);
+}
+
+h1 {
+  font-size: clamp(2.5rem, 4vw, 4rem);
+}
+
+h2 {
+  font-size: clamp(2rem, 3vw, 2.8rem);
+}
+
+h3 {
+  font-size: clamp(1.5rem, 2.2vw, 2rem);
+}
+
+h4 {
+  font-size: 1.4rem;
+}
+
+h5 {
+  font-size: 1.2rem;
+}
+
+h6 {
+  font-size: 1rem;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+/* Drop caps for first paragraph of articles */
+.article-content p:first-of-type::first-letter {
+  font-family: var(--font-serif);
+  font-size: 3.8rem;
+  float: left;
+  line-height: 1;
+  padding-right: 0.1em;
+  padding-top: 0.1em;
+  margin-top: 0;
+  color: var(--text-color);
+}
+
+/* Small-caps utility */
+.smallcaps {
+  font-family: var(--font-serif);
+  font-variant-caps: small-caps;
+  letter-spacing: 0.04em;
+}
+
+/* Blockquote styling */
+blockquote {
+  font-family: var(--font-serif);
+  font-size: 1.4rem;
+  line-height: 1.4;
+  border-left: 3px solid var(--violet);
+  padding-left: 1rem;
+  margin: 2rem 0;
+  opacity: 0.85;
 }
 
 /* Buttons */
 button {
+  font-family: var(--font-sans);
   border-radius: 8px;
   border: 1px solid transparent;
   padding: 0.6em 1.2em;
   font-size: 1em;
   font-weight: 500;
-  font-family: inherit;
   
   background-color: var(--green);
   color: var(--moon);
