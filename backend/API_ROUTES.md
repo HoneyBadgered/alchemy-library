@@ -30,16 +30,16 @@ Authorization: Bearer YOUR_JWT_TOKEN
 
 **Description:** Returns published Log entries.
 
-**Query Parameters (Strapi v4 format):**
-- `filters[status][$eq]=published` - Filter for published content only using Strapi v4 filter syntax
-- `populate[tags]=*` - Include related tags (use bracket notation for consistency)
+**Query Parameters (Strapi v5 format):**
+- `filters[status][$eq]=published` - Filter for published content only using Strapi v5 filter syntax
+- `populate=tags` - Include related tags
 - `sort=createdAt:desc` - Sort order
 - `pagination[page]` - Page number
 - `pagination[pageSize]` - Items per page
 
 **Example Request:**
 ```bash
-curl 'http://localhost:1337/api/logs?filters[status][$eq]=published&populate[tags]=*&sort=createdAt:desc&pagination[page]=1&pagination[pageSize]=10'
+curl 'http://localhost:1337/api/logs?filters[status][$eq]=published&populate=tags&sort=createdAt:desc&pagination[page]=1&pagination[pageSize]=10'
 ```
 
 **Example Response:**
@@ -90,12 +90,12 @@ curl 'http://localhost:1337/api/logs?filters[status][$eq]=published&populate[tag
 
 **Description:** Returns published Grimoire entries.
 
-**Query Parameters (Strapi v4 format):** Same as Log endpoints, plus:
-- `populate[heroImage]=*` - Include hero image media
+**Query Parameters (Strapi v5 format):** Same as Log endpoints, plus:
+- `populate=tags,heroImage` - Include tags and hero image media
 
 **Example Request:**
 ```bash
-curl 'http://localhost:1337/api/grimoires?filters[status][$eq]=published&populate[tags]=*&populate[heroImage]=*&sort=createdAt:desc&pagination[page]=1&pagination[pageSize]=10'
+curl 'http://localhost:1337/api/grimoires?filters[status][$eq]=published&populate=tags,heroImage&sort=createdAt:desc&pagination[page]=1&pagination[pageSize]=10'
 ```
 
 **Example Response:**
@@ -162,14 +162,14 @@ curl 'http://localhost:1337/api/grimoires?filters[status][$eq]=published&populat
 
 **Description:** Fetch a specific Log entry by its slug.
 
-**Query Parameters (Strapi v4 format):**
-- `filters[slug][$eq]=your-slug-here` - Filter by slug using Strapi v4 filter syntax
+**Query Parameters (Strapi v5 format):**
+- `filters[slug][$eq]=your-slug-here` - Filter by slug using Strapi v5 filter syntax
 - `filters[status][$eq]=published` - Only published content
-- `populate[tags]=*` - Include tags
+- `populate=tags` - Include tags
 
 **Example Request:**
 ```bash
-curl 'http://localhost:1337/api/logs?filters[slug][$eq]=welcome-to-the-alchemy-library&filters[status][$eq]=published&populate[tags]=*'
+curl 'http://localhost:1337/api/logs?filters[slug][$eq]=welcome-to-the-alchemy-library&filters[status][$eq]=published&populate=tags'
 ```
 
 **Example Response:**
@@ -220,12 +220,12 @@ curl 'http://localhost:1337/api/logs?filters[slug][$eq]=welcome-to-the-alchemy-l
 
 **Description:** Fetch a specific Grimoire entry by its slug.
 
-**Query Parameters (Strapi v4 format):** Same as Log by slug, plus:
-- `populate[heroImage]=*` - Include hero image
+**Query Parameters (Strapi v5 format):** Same as Log by slug, plus:
+- `populate=tags,heroImage` - Include tags and hero image
 
 **Example Request:**
 ```bash
-curl 'http://localhost:1337/api/grimoires?filters[slug][$eq]=getting-started-guide&filters[status][$eq]=published&populate[tags]=*&populate[heroImage]=*'
+curl 'http://localhost:1337/api/grimoires?filters[slug][$eq]=getting-started-guide&filters[status][$eq]=published&populate=tags,heroImage'
 ```
 
 ---
@@ -425,7 +425,7 @@ GET /api/logs?populate=*
 
 ### Populate specific relations
 ```
-GET /api/grimoires?populate[tags]=*&populate[heroImage]=*
+GET /api/grimoires?populate=tags,heroImage
 ```
 
 ---
