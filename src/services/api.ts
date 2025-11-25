@@ -112,6 +112,14 @@ class StrapiAPI {
       slug: tag.attributes?.slug || '',
     })) || [];
     
+    // Validate required timestamp fields
+    if (!attributes?.createdAt) {
+      console.warn(`Post ${id} is missing createdAt timestamp`);
+    }
+    if (!attributes?.updatedAt) {
+      console.warn(`Post ${id} is missing updatedAt timestamp`);
+    }
+    
     return {
       id,
       type,
@@ -121,8 +129,9 @@ class StrapiAPI {
       content,
       author: attributes?.author,
       category: grimoireAttrs?.category,
-      createdAt: attributes?.createdAt || new Date().toISOString(),
-      updatedAt: attributes?.updatedAt || new Date().toISOString(),
+      // Required timestamp fields - log warning if missing (indicates data integrity issue)
+      createdAt: attributes?.createdAt || '',
+      updatedAt: attributes?.updatedAt || '',
       publishedAt: attributes?.publishedAt,
       heroImage: heroImageUrl,
       tags,

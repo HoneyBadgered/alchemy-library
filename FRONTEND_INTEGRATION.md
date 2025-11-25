@@ -178,8 +178,6 @@ The API service uses Strapi v4's filter syntax to fetch only published content.
 - `/api/logs?filters[status][$eq]=published&populate[tags]=*` - Published logs with tags
 - `/api/grimoires?filters[status][$eq]=published&populate[tags]=*&populate[heroImage]=*` - Published grimoires with tags and hero images
 
-**Note:** The `filters[status][$eq]=published` syntax follows Strapi v4 conventions. Some Strapi 5 installations may also support `status=published` as a shorthand.
-
 See `src/services/api.ts` for the full implementation with detailed comments.
 
 ---
