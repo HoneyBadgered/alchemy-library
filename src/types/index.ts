@@ -1,28 +1,26 @@
-// Strapi-specific types
+// Strapi v5 response types (flattened format - no attributes wrapper)
 export interface StrapiImage {
   id: number;
-  attributes: {
-    url: string;
-    alternativeText?: string;
-    width: number;
-    height: number;
-    formats?: {
-      thumbnail?: { url: string };
-      small?: { url: string };
-      medium?: { url: string };
-      large?: { url: string };
-    };
+  documentId?: string;
+  url: string;
+  alternativeText?: string;
+  width: number;
+  height: number;
+  formats?: {
+    thumbnail?: { url: string };
+    small?: { url: string };
+    medium?: { url: string };
+    large?: { url: string };
   };
 }
 
 export interface StrapiTag {
   id: number;
-  attributes: {
-    name: string;
-    slug: string;
-    createdAt: string;
-    updatedAt: string;
-  };
+  documentId?: string;
+  name: string;
+  slug: string;
+  createdAt: string;
+  updatedAt: string;
 }
 
 export interface StrapiResponse<T> {
@@ -46,7 +44,7 @@ export interface StrapiError {
   };
 }
 
-// Content type attributes
+// Content type definitions (Strapi v5 flattened format)
 export interface LogAttributes {
   title: string;
   slug: string;
@@ -56,9 +54,7 @@ export interface LogAttributes {
   createdAt: string;
   updatedAt: string;
   publishedAt?: string;
-  tags?: {
-    data: StrapiTag[];
-  };
+  tags?: StrapiTag[];
 }
 
 export interface GrimoireAttributes {
@@ -71,22 +67,38 @@ export interface GrimoireAttributes {
   createdAt: string;
   updatedAt: string;
   publishedAt?: string;
-  heroImage?: {
-    data: StrapiImage | null;
-  };
-  tags?: {
-    data: StrapiTag[];
-  };
+  heroImage?: StrapiImage | null;
+  tags?: StrapiTag[];
 }
 
 export interface StrapiLog {
   id: number;
-  attributes: LogAttributes;
+  documentId?: string;
+  title: string;
+  slug: string;
+  body?: string;
+  excerpt?: string;
+  author?: string;
+  createdAt: string;
+  updatedAt: string;
+  publishedAt?: string;
+  tags?: StrapiTag[];
 }
 
 export interface StrapiGrimoire {
   id: number;
-  attributes: GrimoireAttributes;
+  documentId?: string;
+  title: string;
+  slug: string;
+  body?: string;
+  excerpt?: string;
+  author?: string;
+  category?: string;
+  createdAt: string;
+  updatedAt: string;
+  publishedAt?: string;
+  heroImage?: StrapiImage | null;
+  tags?: StrapiTag[];
 }
 
 // Unified library post type
