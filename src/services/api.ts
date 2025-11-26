@@ -5,7 +5,6 @@ import type {
   StrapiGrimoire,
   NormalizedPost,
   StrapiError,
-  GrimoireAttributes,
 } from '../types';
 
 class StrapiAPIError extends Error {
@@ -85,54 +84,56 @@ class StrapiAPI {
 
   /**
    * Normalize Strapi post data for easier component consumption.
+   * Handles Strapi v5 flattened response format (no attributes wrapper).
    * Safely handles missing or undefined fields from the API response.
    * 
-   * @param post - The raw Strapi post response
+   * @param post - The raw Strapi post response (flattened v5 format)
    * @param type - The type of post ('log' or 'grimoire')
    * @returns Normalized post object with consistent structure
    */
   private normalizePost(post: StrapiLog | StrapiGrimoire, type: 'log' | 'grimoire'): NormalizedPost {
-    const { id, attributes } = post;
+    // Strapi v5 returns flattened data (no attributes wrapper)
+    const { id } = post;
     // Safely handle missing body field
-    const content = attributes?.body || '';
+    const content = post.body || '';
     
-    // Cast to grimoire attributes only when type is grimoire
-    const grimoireAttrs = type === 'grimoire' ? attributes as GrimoireAttributes : null;
+    // Cast to grimoire type only when type is grimoire
+    const grimoirePost = type === 'grimoire' ? post as StrapiGrimoire : null;
     
-    // Safely extract heroImage URL if present
+    // Safely extract heroImage URL if present (Strapi v5 flattened format)
     let heroImageUrl: string | undefined;
-    if (grimoireAttrs?.heroImage?.data?.attributes?.url) {
-      heroImageUrl = `${config.strapi.url}${grimoireAttrs.heroImage.data.attributes.url}`;
+    if (grimoirePost?.heroImage?.url) {
+      heroImageUrl = `${config.strapi.url}${grimoirePost.heroImage.url}`;
     }
     
-    // Safely extract tags, handling missing or malformed tags data
-    const tags = attributes?.tags?.data?.map((tag) => ({
+    // Safely extract tags (Strapi v5 returns tags directly, not nested in data)
+    const tags = post.tags?.map((tag) => ({
       id: tag.id,
-      name: tag.attributes?.name || '',
-      slug: tag.attributes?.slug || '',
+      name: tag.name || '',
+      slug: tag.slug || '',
     })) || [];
     
     // Validate required timestamp fields
-    if (!attributes?.createdAt) {
+    if (!post.createdAt) {
       console.warn(`Post ${id} is missing createdAt timestamp`);
     }
-    if (!attributes?.updatedAt) {
+    if (!post.updatedAt) {
       console.warn(`Post ${id} is missing updatedAt timestamp`);
     }
     
     return {
       id,
       type,
-      title: attributes?.title || '',
-      slug: attributes?.slug || '',
-      excerpt: attributes?.excerpt,
+      title: post.title || '',
+      slug: post.slug || '',
+      excerpt: post.excerpt,
       content,
-      author: attributes?.author,
-      category: grimoireAttrs?.category,
+      author: post.author,
+      category: grimoirePost?.category,
       // Required timestamp fields - log warning if missing (indicates data integrity issue)
-      createdAt: attributes?.createdAt || '',
-      updatedAt: attributes?.updatedAt || '',
-      publishedAt: attributes?.publishedAt,
+      createdAt: post.createdAt || '',
+      updatedAt: post.updatedAt || '',
+      publishedAt: post.publishedAt,
       heroImage: heroImageUrl,
       tags,
     };
@@ -324,14 +325,14 @@ class StrapiAPI {
    */
   async getTags(): Promise<Array<{ id: number; name: string; slug: string }>> {
     const response = await this.fetch<
-      StrapiResponse<Array<{ id: number; attributes: { name: string; slug: string } }>>
+      StrapiResponse<Array<{ id: number; name: string; slug: string }>>
     >(`/tags?sort=name:asc`);
 
-    // Safely handle missing or malformed tag data
+    // Strapi v5 returns flattened data (no attributes wrapper)
     return response.data.map((tag) => ({
       id: tag.id,
-      name: tag.attributes?.name || '',
-      slug: tag.attributes?.slug || '',
+      name: tag.name || '',
+      slug: tag.slug || '',
     }));
   }
 }
