@@ -24,8 +24,8 @@ class StrapiAPIError extends Error {
  * Query Parameter Conventions (Strapi v5):
  * - Filtering: Use `filters[field][$operator]=value` syntax
  *   Example: `filters[status][$eq]=published`
- * - Population: Use `populate=relation1,relation2` for relations
- *   Example: `populate=tags`, `populate=tags,heroImage`
+ * - Population: Use `populate[relation]=true` for relations
+ *   Example: `populate[tags]=true`, `populate[tags]=true&populate[heroImage]=true`
  * - Sorting: Use `sort=field:direction`
  *   Example: `sort=createdAt:desc`
  * - Pagination: Use `pagination[page]=N` and `pagination[pageSize]=N`
@@ -143,7 +143,7 @@ class StrapiAPI {
    * 
    * Strapi v5 Query Format:
    * - Filter by status: `filters[status][$eq]=published`
-   * - Populate relations: `populate=tags`, `populate=tags,heroImage`
+   * - Populate relations: `populate[tags]=true`, `populate[tags]=true&populate[heroImage]=true`
    * - Sort: `sort=createdAt:desc`
    * - Pagination: `pagination[page]=N`, `pagination[pageSize]=N`
    * 
@@ -158,14 +158,14 @@ class StrapiAPI {
 
     // Fetch both logs and grimoires using Strapi v5 query syntax
     // status=published - Filter for published content only (Strapi v5 uses status parameter, not filters[status])
-    // populate=tags - Include related tags
-    // populate=tags,heroImage - Include tags and hero image for grimoires
+    // populate[tags]=true - Include related tags
+    // populate[tags]=true&populate[heroImage]=true - Include tags and hero image for grimoires
     const [logsResponse, grimoiresResponse] = await Promise.all([
       this.fetch<StrapiResponse<StrapiLog[]>>(
-        `/logs?status=published&populate=tags&sort=createdAt:desc&pagination[page]=${page}&pagination[pageSize]=${pageSize}`
+        `/logs?status=published&populate[tags]=true&sort=createdAt:desc&pagination[page]=${page}&pagination[pageSize]=${pageSize}`
       ),
       this.fetch<StrapiResponse<StrapiGrimoire[]>>(
-        `/grimoires?status=published&populate=tags,heroImage&sort=createdAt:desc&pagination[page]=${page}&pagination[pageSize]=${pageSize}`
+        `/grimoires?status=published&populate[tags]=true&populate[heroImage]=true&sort=createdAt:desc&pagination[page]=${page}&pagination[pageSize]=${pageSize}`
       ),
     ]);
 
@@ -193,7 +193,7 @@ class StrapiAPI {
    * 
    * Strapi v5 Query Format:
    * - Publication status: `status=published` (Strapi v5 uses status parameter, not filters[status])
-   * - Populate relations: `populate=tags`
+   * - Populate relations: `populate[tags]=true`
    * - Sort: `sort=createdAt:desc`
    * - Pagination: `pagination[page]=N`, `pagination[pageSize]=N`
    * 
@@ -207,7 +207,7 @@ class StrapiAPI {
     const { page = 1, pageSize = 25 } = params || {};
 
     const response = await this.fetch<StrapiResponse<StrapiLog[]>>(
-      `/logs?status=published&populate=tags&sort=createdAt:desc&pagination[page]=${page}&pagination[pageSize]=${pageSize}`
+      `/logs?status=published&populate[tags]=true&sort=createdAt:desc&pagination[page]=${page}&pagination[pageSize]=${pageSize}`
     );
 
     return {
@@ -221,7 +221,7 @@ class StrapiAPI {
    * 
    * Strapi v5 Query Format:
    * - Publication status: `status=published` (Strapi v5 uses status parameter, not filters[status])
-   * - Populate relations: `populate=tags,heroImage`
+   * - Populate relations: `populate[tags]=true&populate[heroImage]=true`
    * - Sort: `sort=createdAt:desc`
    * - Pagination: `pagination[page]=N`, `pagination[pageSize]=N`
    * 
@@ -235,7 +235,7 @@ class StrapiAPI {
     const { page = 1, pageSize = 25 } = params || {};
 
     const response = await this.fetch<StrapiResponse<StrapiGrimoire[]>>(
-      `/grimoires?status=published&populate=tags,heroImage&sort=createdAt:desc&pagination[page]=${page}&pagination[pageSize]=${pageSize}`
+      `/grimoires?status=published&populate[tags]=true&populate[heroImage]=true&sort=createdAt:desc&pagination[page]=${page}&pagination[pageSize]=${pageSize}`
     );
 
     return {
@@ -251,7 +251,7 @@ class StrapiAPI {
    * Strapi v5 Query Format:
    * - Filter by slug: `filters[slug][$eq]=slug-value`
    * - Publication status: `status=published` (Strapi v5 uses status parameter, not filters[status])
-   * - Populate relations: `populate=tags`, `populate=tags,heroImage`
+   * - Populate relations: `populate[tags]=true`, `populate[tags]=true&populate[heroImage]=true`
    * 
    * @param slug - The post's URL slug
    * @param type - Optional type to search in a specific collection
@@ -268,8 +268,8 @@ class StrapiAPI {
       // Search in specific collection using Strapi v5 query syntax
       const endpoint =
         type === 'log'
-          ? `/logs?filters[slug][$eq]=${encodedSlug}&status=published&populate=tags`
-          : `/grimoires?filters[slug][$eq]=${encodedSlug}&status=published&populate=tags,heroImage`;
+          ? `/logs?filters[slug][$eq]=${encodedSlug}&status=published&populate[tags]=true`
+          : `/grimoires?filters[slug][$eq]=${encodedSlug}&status=published&populate[tags]=true&populate[heroImage]=true`;
 
       const response = await this.fetch<
         StrapiResponse<(StrapiLog | StrapiGrimoire)[]>
@@ -285,7 +285,7 @@ class StrapiAPI {
     // Search both collections using Strapi v5 query syntax
     try {
       const logResponse = await this.fetch<StrapiResponse<StrapiLog[]>>(
-        `/logs?filters[slug][$eq]=${encodedSlug}&status=published&populate=tags`
+        `/logs?filters[slug][$eq]=${encodedSlug}&status=published&populate[tags]=true`
       );
 
       if (logResponse.data.length > 0) {
@@ -299,7 +299,7 @@ class StrapiAPI {
       const grimoireResponse = await this.fetch<
         StrapiResponse<StrapiGrimoire[]>
       >(
-        `/grimoires?filters[slug][$eq]=${encodedSlug}&status=published&populate=tags,heroImage`
+        `/grimoires?filters[slug][$eq]=${encodedSlug}&status=published&populate[tags]=true&populate[heroImage]=true`
       );
 
       if (grimoireResponse.data.length > 0) {
