@@ -80,6 +80,12 @@ export default function BlogPostPage() {
           </div>
         </header>
 
+        {post.heroImage && (
+          <div className="post-hero-image">
+            <img src={post.heroImage} alt={post.title} />
+          </div>
+        )}
+
         <div className="post-content">
           {post.content.split('\n').map((line, index) => {
             if (line.startsWith('### ')) {

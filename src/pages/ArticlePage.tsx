@@ -85,6 +85,12 @@ export default function ArticlePage() {
           )}
         </header>
 
+        {article.heroImage && (
+          <div className="article-hero-image">
+            <img src={article.heroImage} alt={article.title} />
+          </div>
+        )}
+
         <div className="article-content">
           {article.content.split('\n').map((line, index) => {
             if (line.startsWith('### ')) {
