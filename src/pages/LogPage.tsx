@@ -82,19 +82,28 @@ export default function LogPage() {
       <div className="posts-container">
         {logs.map((post) => (
           <article key={post.id} className="post-card">
-            <div className="post-meta">
-              <span className="post-date">{formatDate(post.createdAt)}</span>
-              {post.author && (
-                <span className="post-author">by {post.author}</span>
-              )}
+            {post.heroImage && (
+              <div className="post-thumbnail">
+                <Link to={`/log/${post.slug}`}>
+                  <img src={post.heroImage} alt={post.title} />
+                </Link>
+              </div>
+            )}
+            <div className="post-content">
+              <div className="post-meta">
+                <span className="post-date">{formatDate(post.createdAt)}</span>
+                {post.author && (
+                  <span className="post-author">by {post.author}</span>
+                )}
+              </div>
+              <h2 className="post-title">
+                <Link to={`/log/${post.slug}`}>{post.title}</Link>
+              </h2>
+              <p className="post-excerpt">{post.excerpt}</p>
+              <Link to={`/log/${post.slug}`} className="read-more">
+                Read more →
+              </Link>
             </div>
-            <h2 className="post-title">
-              <Link to={`/log/${post.slug}`}>{post.title}</Link>
-            </h2>
-            <p className="post-excerpt">{post.excerpt}</p>
-            <Link to={`/log/${post.slug}`} className="read-more">
-              Read more →
-            </Link>
           </article>
         ))}
       </div>

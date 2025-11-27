@@ -90,6 +90,13 @@ export default function GrimoirePage() {
                 )
                 .map((grimoire) => (
                   <article key={grimoire.id} className="article-card">
+                    {grimoire.heroImage && (
+                      <div className="article-thumbnail">
+                        <Link to={`/grimoire/${grimoire.slug}`}>
+                          <img src={grimoire.heroImage} alt={grimoire.title} />
+                        </Link>
+                      </div>
+                    )}
                     <div className="article-meta">
                       <span className="article-category">
                         {grimoire.category || 'Uncategorized'}

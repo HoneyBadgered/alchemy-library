@@ -54,6 +54,7 @@ export interface LogAttributes {
   createdAt: string;
   updatedAt: string;
   publishedAt?: string;
+  heroImage?: StrapiImage | null;
   tags?: StrapiTag[];
 }
 
@@ -82,6 +83,7 @@ export interface StrapiLog {
   createdAt: string;
   updatedAt: string;
   publishedAt?: string;
+  heroImage?: StrapiImage | null;
   tags?: StrapiTag[];
 }
 
