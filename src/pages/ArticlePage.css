@@ -33,6 +33,18 @@
   margin-bottom: 2rem;
 }
 
+.article-hero-image {
+  margin-bottom: 2rem;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.article-hero-image img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
 .article-meta {
   display: flex;
   gap: 1rem;
